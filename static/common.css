@@ -1,0 +1,10 @@
+.page{
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.weui-cell:before {left: 0}
+.weui-cells{margin-top: 0}
+.pt30{padding-top: 30px}
