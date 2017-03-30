@@ -1,1 +1,24 @@
+hr{border: 1px solid #ccc; border-top: none }
+
+/*面板*/
+.my-panel{background: #fff;border-radius: 5px;padding: 5px;padding-top: 12px}
+.item{margin-top: 5px}
+
+.btn-panel{padding-left: 10px;margin-top: 10px}
+/*输入框*/
+.text {display: inline-block;width: 80px;color: #000;font-size: 14px;margin-left: 10px;font-weight: bold}
+.my-panel input{display: inline-block;font-size:12px;width: 100px;height:18px;padding-left: 5px;border-radius: 2px;border: 1px solid #ccc}
+/*按钮*/
+.my-panel .el-button{height: 25px;  line-height: 25px;  padding: 0 15px;  border-radius: 0;}
+.my-panel .el-button.el-button--primary{background-color: #337ab7;border-color:#337ab7 }
+.my-panel .el-button.el-button--primary:hover{background-color: #286090;border-color:#286090 }
+/*日期选择器*/
+.my-panel .el-input__inner{box-sizing: content-box;padding: 0 ;padding-right: 0!important;padding-left: 5px}
+.my-panel .el-date-editor.el-input{width: 108px; }
+/*表格*/
+.container .el-table td, .container .el-table th{height: 30px; }
+.el-table tr.active {background-color: #3682c3;color: #fff}
+.el-table tr.active:hover {background-color: #3682c3;color: #fff}
+.el-table--enable-row-hover tr.active:hover>td {  background-color: #3682c3;  }
+
 
