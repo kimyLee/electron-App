@@ -6,7 +6,7 @@
           <el-col :span="12">
             <my-date text="开始日期" v-model="date2"></my-date>
             <my-date text="销售日期" v-model="date2"></my-date>
-            <my-search text="单据类型" v-model="store2" :options="options1" no-search="true"></my-search>
+            <my-search text="单据类型" v-model="store2" :options="options1" no-search></my-search>
           </el-col>
           <el-col :span="12">
             <my-search text="供应商" v-model="store2" :method="searchId" :options="options"></my-search>

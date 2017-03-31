@@ -6,7 +6,7 @@
         <my-search text="客户编号" v-model="store2" :method="searchId" :options="options"></my-search>
         <my-search text="拼音码" v-model="store2" :method="searchId" :options="options"></my-search>
         <my-input text="客户名称" v-model="store1"></my-input>
-        <my-input text="借款金额" v-model="store1"></my-input>
+        <my-input text="还款金额" v-model="store1"></my-input>
         <my-input text="总欠金额" v-model="store1"></my-input>
         <my-input text="借款对象" v-model="store1"></my-input>
         <my-input text="备注" v-model="store1"></my-input>

@@ -17,7 +17,13 @@
 
 <script>
 export default {
-  props: ['text', 'value', 'method', 'options', 'noSearch'],
+  props: {
+    text: String,
+    value: String,
+    method: Function,
+    options: Array,
+    noSearch: Boolean
+  },
   data () {
     return {
       val: ''
@@ -27,7 +33,6 @@ export default {
     this.$nextTick(function () {
       if (this.value) {
         this.val = this.value
-        console.log(this.value, this.options)
       }
     })
   },

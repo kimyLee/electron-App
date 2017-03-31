@@ -26,8 +26,8 @@
     data () {
       return {
         tableConfig: [
-          {label: '借款对象(公司或供应商)', prop: 'name'},
-          {label: '借款金额(元)', prop: 'name'}
+          {label: '还款对象(公司或供应商)', prop: 'name'},
+          {label: '还款金额(元)', prop: 'name'}
         ],
         tableData: [{
           date: '2016-05-03',

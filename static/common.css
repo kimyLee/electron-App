@@ -23,5 +23,7 @@ hr{border: 1px solid #ccc; border-top: none }
 .el-table tr.active {background-color: #3682c3;color: #fff}
 .el-table tr.active:hover {background-color: #3682c3;color: #fff}
 .el-table--enable-row-hover tr.active:hover>td {  background-color: #3682c3;  }
+/*边框*/
+#side .el-menu-item-group__title {padding-top: 0;color: #666}
 
 

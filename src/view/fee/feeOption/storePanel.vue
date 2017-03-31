@@ -2,16 +2,13 @@
     <!--操作-->
     <el-col :span="6">
       <div class="my-panel" style="padding: 0">
-        <div class="my-panel-header">操作</div>
-        <my-search text="客户编号" v-model="store2" :method="searchId" :options="options"></my-search>
-        <my-search text="拼音码" v-model="store2" :method="searchId" :options="options"></my-search>
-        <my-input text="客户名称" v-model="store1"></my-input>
-        <my-input text="借款金额" v-model="store1"></my-input>
-        <my-input text="总欠金额" v-model="store1"></my-input>
-        <my-input text="借款对象" v-model="store1"></my-input>
-        <my-input text="备注" v-model="store1"></my-input>
+        <div class="my-panel-header">费用管理</div>
+        <my-input text="费用名称" v-model="store1"></my-input>
+        <my-input text="拼音码" v-model="store1"></my-input>
+        <my-search text="供应商" v-model="store2" :method="searchId" :options="options"></my-search>
         <div class="btn-panel">
           <el-button type="primary">添加</el-button>
+          <el-button>取消</el-button>
         </div>
       </div>
     </el-col>
@@ -22,9 +19,6 @@
   import myDate from '@/components/myDatePicker'
   import mySearch from '@/components/mySearchInput'
   export default {
-    props: {
-      test: Boolean
-    },
     data () {
       return {
         date: '',
@@ -46,14 +40,7 @@
       myDate
     },
     watch: {
-      store1 () {
-        console.log(this.store1)
-      }
-    },
-    mounted: function () {
-      this.$nextTick(function () {
-        console.log(this.test, 233)
-      })
+      store1 () {}
     },
     methods: {
       searchId (key) {

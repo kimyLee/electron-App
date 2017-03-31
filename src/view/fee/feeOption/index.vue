@@ -16,18 +16,22 @@
       </el-table>
     </el-col>
     <!--操作-->
-    <store ></store>
+    <store></store>
   </el-row>
 </template>
 
 <script>
-  import store from './panel'
+  import store from './storePanel'
   export default {
     data () {
       return {
         tableConfig: [
-          {label: '借款对象(公司或供应商)', prop: 'name'},
-          {label: '借款金额(元)', prop: 'name'}
+          {label: 'ID', prop: 'name'},
+          {label: '客户名', prop: 'name'},
+          {label: '拼音码', prop: 'name'},
+          {label: '总欠', prop: 'name'},
+          {label: '手机号', prop: 'name'},
+          {label: '欠费额度', prop: 'name'}
         ],
         tableData: [{
           date: '2016-05-03',
