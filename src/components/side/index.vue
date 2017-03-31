@@ -6,11 +6,11 @@
         <el-menu-item index="/">下单</el-menu-item>
         <el-menu-item index="/chaxun">销售查询</el-menu-item>
         <el-menu-item index="/mingxi">销售明细</el-menu-item>
-        <el-menu-item index="1-4">商品管理</el-menu-item>
+        <el-menu-item index="/store">商品管理</el-menu-item>
       </el-menu-item-group>
       <el-menu-item-group title="客户" >
         <i class="el-icon-menu title-icon" ></i>
-        <el-menu-item index="2-1">借款</el-menu-item>
+        <el-menu-item index="/borrow">借款</el-menu-item>
         <el-menu-item index="2-2">还款</el-menu-item>
         <el-menu-item index="2-3">欠款查询</el-menu-item>
         <el-menu-item index="2-4">客户管理</el-menu-item>

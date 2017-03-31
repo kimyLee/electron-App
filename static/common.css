@@ -1,10 +1,13 @@
 hr{border: 1px solid #ccc; border-top: none }
 
 /*面板*/
-.my-panel{background: #fff;border-radius: 5px;padding: 5px;padding-top: 12px}
+.my-panel{background: #fff;border-radius: 5px;padding: 5px;padding-top: 12px;border: 1px solid #ccc}
+.my-panel-default{background: #fff;border-radius: 5px;}
+.my-panel-header{background: #f0f0f0;border-radius: 5px 5px 0 0;padding: 5px;height: 30px;line-height: 30px;
+  font-size: 18px;border-bottom: 1px solid #ccc}
 .item{margin-top: 5px}
 
-.btn-panel{padding-left: 10px;margin-top: 10px}
+.btn-panel{padding-left: 10px;margin-top: 10px;margin-bottom: 10px}
 /*输入框*/
 .text {display: inline-block;width: 80px;color: #000;font-size: 14px;margin-left: 10px;font-weight: bold}
 .my-panel input{display: inline-block;font-size:12px;width: 100px;height:18px;padding-left: 5px;border-radius: 2px;border: 1px solid #ccc}
