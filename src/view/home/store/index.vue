@@ -28,6 +28,8 @@
 
 <script>
   import store from './storePanel'
+  // import api from '@/services/home'
+
   export default {
     data () {
       return {

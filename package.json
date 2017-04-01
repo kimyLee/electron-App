@@ -9,6 +9,7 @@
     "all": "node build/dev-server.js & electron .",
     "start": "electron .",
     "dev": "node build/dev-server.js",
+    "mydev": "concurrently \"node build/dev-server.js\" \"electron .\"",
     "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src"
   },

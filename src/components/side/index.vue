@@ -8,7 +8,7 @@
         <el-menu-item index="/mingxi">销售明细</el-menu-item>
         <el-menu-item index="/store">商品管理</el-menu-item>
       </el-menu-item-group>
-      <el-menu-item-group title="客户" >
+      <el-menu-item-group title="客户">
         <i class="el-icon-menu title-icon" ></i>
         <el-menu-item index="/borrow">借款</el-menu-item>
         <el-menu-item index="/back">还款</el-menu-item>

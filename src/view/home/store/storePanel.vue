@@ -3,13 +3,13 @@
     <el-col :span="6">
       <div class="my-panel" style="padding: 0">
         <div class="my-panel-header">商品管理</div>
-        <my-input text="商品名称" v-model="store1"></my-input>
-        <my-input text="拼音码" v-model="store1"></my-input>
-        <my-input text="库存" v-model="store1"></my-input>
-        <my-search text="供货商" v-model="store2" :method="searchId" :options="options"></my-search>
-        <my-input text="单位" v-model="store1"></my-input>
-        <my-input text="过磅费" v-model="store1"></my-input>
-        <my-input text="包装费" v-model="store1"></my-input>
+        <my-input text="商品名称" v-model="name"></my-input>
+        <my-input text="拼音码" v-model="code"></my-input>
+        <my-input text="库存" v-model="num"></my-input>
+        <my-search text="供货商" v-model="supplier" :method="searchId" :options="options"></my-search>
+        <my-input text="单位" v-model="unit"></my-input>
+        <my-input text="过磅费" v-model="weight"></my-input>
+        <my-input text="包装费" v-model="pack"></my-input>
         <div class="btn-panel">
           <el-button type="primary">添加</el-button>
           <el-button>删除</el-button>

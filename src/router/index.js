@@ -13,6 +13,7 @@ import feeDetail from '@/view/fee/feeDetail'
 import feeOption from '@/view/fee/feeOption'
 import feeIn from '@/view/fee/in'
 import feeOut from '@/view/fee/out'
+import supplier from '@/view/supplier/supplier'
 
 Vue.use(Router)
 
@@ -82,6 +83,12 @@ export default new Router({
       path: '/feeOut',
       name: 'feeOut',
       component: feeOut
+    },
+    // 供应商
+    {
+      path: '/supplier',
+      name: 'supplier',
+      component: supplier
     }
   ]
 })
