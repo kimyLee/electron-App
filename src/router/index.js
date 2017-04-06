@@ -14,6 +14,7 @@ import feeOption from '@/view/fee/feeOption'
 import feeIn from '@/view/fee/in'
 import feeOut from '@/view/fee/out'
 import supplier from '@/view/supplier/supplier'
+import transforms from '@/view/supplier/transform'
 
 Vue.use(Router)
 
@@ -89,6 +90,11 @@ export default new Router({
       path: '/supplier',
       name: 'supplier',
       component: supplier
+    },
+    {
+      path: '/transforms',
+      name: 'transforms',
+      component: transforms
     }
   ]
 })

@@ -1,17 +1,20 @@
 <template>
-  <el-row>
+  <el-row class="customer">
     <!--数据展示-->
     <el-col :span="18">
       <el-table
-        :data="tableData"
-        height="700"
-        stripe
-        border
-        style="width: 100%;font-size: 12px">
+              :data="tableData"
+              height="700"
+              stripe
+              border
+              :row-class-name="setClass"
+              @row-click="selectItem"
+              style="width: 100%;font-size: 12px">
         <el-table-column v-for="(item, $index) in tableConfig"
-          :prop="item.prop"
-          :label="item.label"
-          :width="item.width">
+                         :prop="item.prop"
+                         :label="item.label"
+                         :formatter="getStatus(item.label)"
+                         :width="item.width">
         </el-table-column>
       </el-table>
     </el-col>
@@ -20,50 +23,26 @@
   </el-row>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
   import store from './storePanel'
+  import api from '@/services/fee'
+  import bus from '@/bus'
   export default {
     data () {
       return {
+        index: -1,
+        page: {size: 15, num: 1, total: 0},
         tableConfig: [
-          {label: '日期', prop: 'name'},
-          {label: '编号', prop: 'name'},
-          {label: '拼音码', prop: 'name'},
-          {label: '名称', prop: 'name'},
-          {label: '金额', prop: 'name'},
-          {label: '供货商', prop: 'name'},
-          {label: '备注', prop: 'name'},
-          {label: '状态', prop: 'name'}
+          {label: '日期', prop: 'date'},
+          {label: '编号', prop: 'id'},
+          {label: '拼音码', prop: 'spell'},
+          {label: '费用名称', prop: 'name'},
+          {label: '供应商', prop: 'supplier'},
+          {label: '费用金额', prop: 'money'},
+          {label: '备注', prop: 'remark'},
+          {label: '状态', prop: 'isDelete'}
         ],
-        tableData: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }]
+        tableData: []
       }
     },
     components: {
@@ -71,13 +50,43 @@
     },
     mounted: function () {
       this.$nextTick(function () {
-        console.log(this.$route)
+        this.getFee()
+        bus.$on('getFeeDetailList', this.getFee)
       })
+    },
+    methods: {
+      getFee (obj) {
+        const today = (new Date()).Format('yyyy-MM-dd')
+        api.checkFee({
+          startDate: (obj && obj.begin) || today,
+          endDate: (obj && obj.end) || today,
+          delete: (obj && obj.isDelete >= 0) ? obj.isDelete : ''
+        })
+          .then((data) => {
+            if (data.ret === 0) {
+              this.tableData = data.costOrders || []
+            }
+          })
+      },
+      // 状态过滤函数
+      getStatus (label) {
+        if (label === '状态') {
+          return function (row) {
+            return row.isDelete ? '已删除' : '未删除'
+          }
+        }
+        return null
+      },
+      selectItem (row) {
+        this.index = this.index === row.id ? -1 : row.id
+        bus.$emit('feeDetailRender', Object.assign({}, row, {index: this.index}))
+      },
+      setClass (row) {
+        return row.id === this.index ? 'active' : ''
+      }
     }
   }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-  .el-table::before {width: 0 ;  height: 0;}
+<style>
+  .customer tr {  cursor: pointer }
 </style>

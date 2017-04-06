@@ -7,13 +7,18 @@
   </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
   import side from '@/components/side'
+  import api from '@/services/supplier'
 
   export default {
     name: 'app',
     components: {
       side
+    },
+    mounted: function () {
+      api.updateSupplier({id: 1, name: '公司'})
+        .catch((msg) => { alert(msg) })
     }
   }
 </script>

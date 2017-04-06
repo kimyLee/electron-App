@@ -1,63 +1,38 @@
 <template>
-  <el-row>
+  <el-row class="customer">
     <!--数据展示-->
     <el-col :span="18">
       <el-table
-        :data="tableData"
-        height="700"
-        stripe
-        border
-        style="width: 100%;font-size: 12px">
+              :data="tableData"
+              height="700"
+              stripe
+              border
+              style="width: 100%;font-size: 12px">
         <el-table-column v-for="(item, $index) in tableConfig"
-          :prop="item.prop"
-          :label="item.label"
-          :width="item.width">
+                         :prop="item.prop"
+                         :label="item.label"
+                         :width="item.width">
         </el-table-column>
       </el-table>
     </el-col>
     <!--操作-->
-    <store ></store>
+    <store></store>
   </el-row>
 </template>
 
-<script>
-  import store from './panel'
+<script type="text/ecmascript-6">
+  import store from './storePanel'
+  import api from '@/services/customer'
+  import bus from '@/bus'
   export default {
     data () {
       return {
+        index: -1,
         tableConfig: [
-          {label: '借款对象(公司或供应商)', prop: 'name'},
-          {label: '借款金额(元)', prop: 'name'}
+          {label: '借款对象', prop: 'supplier'},
+          {label: '总欠金额', prop: 'money'}
         ],
-        tableData: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }]
+        tableData: []
       }
     },
     components: {
@@ -65,13 +40,23 @@
     },
     mounted: function () {
       this.$nextTick(function () {
-        console.log(this.$route)
+        bus.$on('getBorrowMoney', this.getMoney)
       })
+    },
+    methods: {
+      getMoney (id) {
+        if (id) {
+          api.getBorrowMoney({id})
+            .then((data) => {
+              if (data.ret === 0) {
+                this.tableData = data.details || []
+              }
+            })
+        }
+      }
     }
   }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-  .el-table::before {width: 0 ;  height: 0;}
+<style>
+  .customer tr {  cursor: pointer }
 </style>

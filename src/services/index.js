@@ -21,9 +21,22 @@ function get (url, query = {t: new Date().getTime()}) {
 function post (url, query) {
   return axios.post(domain + url, query).then(handleAll)
 }
+function put (url, query) {
+  return axios.put(domain + url, query).then(handleAll)
+}
+function del (url, query) {
+  return axios({
+    headers: { 'Content-Type': 'application/json' },
+    method: 'delete',
+    url: domain + url,
+    data: query
+  }).then(handleAll)
+}
 
 export default {
   get,
-  post
+  post,
+  put,
+  del
 }
 

@@ -36,7 +36,7 @@
       <el-menu-item-group title="供应商管理" >
         <i class="el-icon-menu title-icon" ></i>
         <el-menu-item index="/ticheng">提成结算</el-menu-item>
-        <el-menu-item index="/giveMoney">转账</el-menu-item>
+        <el-menu-item index="/transforms">转账</el-menu-item>
         <el-menu-item index="/supplier">供应商管理</el-menu-item>
       </el-menu-item-group>
     </el-menu>

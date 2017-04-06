@@ -3,6 +3,7 @@
     <span class="text">{{text}}</span>
     <el-date-picker
       v-model="val"
+      @change="output"
       type="date"
       placeholder="选择日期"
       :picker-options="config">
@@ -27,12 +28,14 @@ export default {
     this.$nextTick(function () {
       if (this.value) {
         this.val = this.value
+      } else {
+        this.val = new Date()
       }
     })
   },
-  watch: {
-    val () {
-      this.$emit('input', this.val)
+  methods: {
+    output (val) {
+      this.$emit('input', val)
     }
   }
 }

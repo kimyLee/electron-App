@@ -1,10 +1,12 @@
 <template>
-  <div class="item">
+  <div class="item canRead">
     <span class="text">{{text}}</span>
     <el-select v-model="val"
+               :id="id"
                :filterable="!noSearch"
                :remote="!noSearch"
                placeholder="请选择"
+               @change="callback"
                :remote-method="method">
       <el-option v-for="item in options"
                  :key="item.value"
@@ -18,9 +20,11 @@
 <script>
 export default {
   props: {
+    id: String,
     text: String,
-    value: String,
+    value: [Number, String],
     method: Function,
+    callback: Function,
     options: Array,
     noSearch: Boolean
   },
@@ -37,8 +41,9 @@ export default {
     })
   },
   watch: {
-    val () {
-      this.$emit('input', this.val)
+    val (val) {
+      console.log(val)
+      this.$emit('input', val)
     }
   }
 }

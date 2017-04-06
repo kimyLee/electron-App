@@ -15,67 +15,52 @@
         </el-table-column>
       </el-table>
     </el-col>
-    <!--操作-->
-    <store ></store>
+    <filter-panel></filter-panel>
   </el-row>
 </template>
 
-<script>
-  import store from './panel'
+<script type="text/ecmascript-6">
+  import filterPanel from './storePanel.vue'
+  import api from '@/services/customer'
+  // import bus from '@/bus'
+
   export default {
     data () {
       return {
         tableConfig: [
-          {label: '客户', prop: 'name'},
-          {label: 'ID', prop: 'name'},
-          {label: '前欠金额', prop: 'name'},
-          {label: '日欠金额', prop: 'name'},
-          {label: '日收金额', prop: 'name'},
-          {label: '总欠金额', prop: 'name'}
+          {label: '客户名称', prop: 'cName', width: '100'},
+          {label: 'ID', prop: 'cId', width: '65'},
+          {label: '前欠金额', prop: 'name', width: '100'},
+          {label: '日欠金额', prop: 'money', width: '100'},
+          {label: '日收金额', prop: 'name', width: '100'},
+          {label: '去尾数', prop: 'name', width: '100'},
+          {label: '总欠金额', prop: 'money', width: '100'}
         ],
-        tableData: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }]
+        tableData: []
       }
     },
     components: {
-      store
+      filterPanel
     },
     mounted: function () {
       this.$nextTick(function () {
-        console.log(this.$route)
+        this.getMoney()
       })
+    },
+    methods: {
+      getMoney () {
+        api.checkLoan()
+          .then((data) => {
+            if (data.ret === 0) {
+              this.tableData = data.total || []
+            }
+          })
+      }
     }
   }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .el-table::before {width: 0 ;  height: 0;}
+
 </style>
