@@ -16,16 +16,6 @@
                          :width="item.width">
         </el-table-column>
       </el-table>
-      <div style="text-align: right">
-        <el-pagination
-                layout="prev, pager, next"
-                :current-page="page.num"
-                :total="page.total"
-                :page-size="page.size"
-                @current-change="pageChange"
-        >
-        </el-pagination>
-      </div>
     </el-col>
     <!--操作-->
     <store></store>
@@ -42,16 +32,13 @@
       return {
         index: -1,
         tableConfig: [
-          {label: 'ID', prop: 'id'},
           {label: '名称', prop: 'name'},
-          {label: '拼音码', prop: 'spell'},
-          {label: '单位', prop: 'unit'},
-          {label: '过磅费', prop: 'weighFee'},
-          {label: '包装费', prop: 'packFee'},
           {label: '供应商', prop: 'supplier'},
-          {label: '库存', prop: 'inventory'}
+          {label: '包装费', prop: 'packFee'},
+          {label: '过磅费', prop: 'weighFee'},
+          {label: '提成方式', prop: 'type'},
+          {label: '提成结算', prop: ''}
         ],
-        page: {size: 15, num: 1, total: 0},
         tableData: []
       }
     },

@@ -15,6 +15,7 @@ import feeIn from '@/view/fee/in'
 import feeOut from '@/view/fee/out'
 import supplier from '@/view/supplier/supplier'
 import transforms from '@/view/supplier/transform'
+import ticheng from '@/view/supplier/ticheng'
 
 Vue.use(Router)
 
@@ -95,6 +96,11 @@ export default new Router({
       path: '/transforms',
       name: 'transforms',
       component: transforms
+    },
+    {
+      path: '/ticheng',
+      name: 'ticheng',
+      component: ticheng
     }
   ]
 })

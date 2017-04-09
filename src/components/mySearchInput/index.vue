@@ -42,8 +42,12 @@ export default {
   },
   watch: {
     val (val) {
-      console.log(val)
       this.$emit('input', val)
+    },
+    value () {
+      if (this.value === '') {
+        this.val = ''
+      }
     }
   }
 }

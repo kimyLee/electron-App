@@ -3,19 +3,26 @@
     <el-col :span="6">
       <div class="my-panel" style="padding: 0">
         <div class="my-panel-header">商品管理</div>
+        <my-input text="供货商" v-model="name" id="name" next="code" ></my-input>
         <my-input text="商品名称" v-model="name" id="name" next="code" ></my-input>
-        <my-input text="拼音码" v-model="code" id="code" next="origin" pre="name"></my-input>
-        <my-input text="库存" v-model="origin" id="origin" next="!supplier_id" pre="code"></my-input>
-        <my-search text="供应商"
-                   id="supplier_id"
-                   v-model="supplierId"
-                   :method="searchId"
-                   :callback="supplierCallback"
-                   :options="supplierOptions">
-        </my-search>
-        <my-input text="单位" v-model="unit" id="unit" next="weight" pre="!supplier_id"></my-input>
-        <my-input text="过磅费" v-model="weight" id="weight" next="pack" pre="unit"></my-input>
-        <my-input text="包装费" v-model="pack" id="pack" next="good_sure" pre="weight"></my-input>
+        <my-input text="包装费" v-model="name" id="name" next="code" ></my-input>
+        <my-input text="过磅费" v-model="name" id="name" next="code" ></my-input>
+        <my-search text="结算方式"
+                   v-model="resultType"
+                   :options="TypeList"
+                   :callback="callback"
+                   no-search></my-search>
+        <my-input text="件数提成" v-model="name" id="name" next="code" ></my-input>
+        <div class="input-group" v-for="(item, $index) in 5">
+          <div class="input-item">
+            单价{{$index}}<br/>
+            <input type="text" class="form-input" />
+          </div>
+          <div class="input-item-right">
+            百分比(%)<br/>
+            <input type="text" class="form-input" />
+          </div>
+        </div>
         <div class="btn-panel">
           <div class="btnItem"
                @keyup.down="goTarget('cus_del')"
@@ -35,7 +42,7 @@
     </el-col>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
   import myInput from '@/components/myInput'
   import myDate from '@/components/myDatePicker'
   import mySearch from '@/components/mySearchInput'
@@ -56,6 +63,10 @@
         weight: 0,
         pack: 0,
         supplierOptions: [],
+        TypeList: [
+          {label: '按件', value: 1},
+          {label: '按百分比', value: 2}
+        ],
         selected: false
       }
     },
@@ -215,4 +226,9 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .input-group {margin-top: 5px}
+  .input-item{width: 120px;display: inline-block ;padding: 0 10px;font-size: 14px;font-weight: bold }
+  .input-item input{width: 100% }
+  .input-item-right{width: 70px;display: inline-block;font-size: 14px;font-weight: bold}
+  .input-item-right input{width:100%}
 </style>
