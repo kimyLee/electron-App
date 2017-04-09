@@ -84,7 +84,7 @@
       },
       selectItem (row) {
         this.index = this.index === row.id ? -1 : row.id
-        bus.$emit('storeRender', Object.assign({}, row, {index: this.index}))
+        bus.$emit('tichengRender', Object.assign({}, row, {index: this.index}))
       },
       setClass (row) {
         return row.id === this.index ? 'active' : ''

@@ -5,6 +5,7 @@
         <div class="my-panel-header">商品管理</div>
         <my-search text="商品名称"
                    id="good_id"
+                   w
                    v-model="id"
                    :method="searchGood"
                    :callback="goodCallback"
@@ -77,6 +78,7 @@
         supplierOptions: [],
         resultType: 1,
         TypeList: [
+          {label: '', value: ''},
           {label: '按件', value: 1},
           {label: '按百分比', value: 2}
         ],
@@ -109,14 +111,20 @@
         bus.$on('tichengRender', (row) => {
           this.selected = row.index >= 0
           if (this.selected) {
+            console.log(row)
+            // 去掉供应商的callback影响
+            if (row.supplierId !== this.supplierId) {
+              this.notClearGood = true
+            }
             this.id = row.id
             this.name = row.name
-            this.code = row.spell
             this.supplier = row.supplier
             this.supplierId = row.supplierId
             this.weight = row.weighFee
-            this.unit = row.unit
+            this.unitFee = row.unitFee
             this.pack = row.packFee
+            this.resultType = (row.type - 0) || ''
+            this.price.price0 = row.price1
           } else {
             this.clearData()
           }
@@ -152,7 +160,7 @@
               this.goodOptions = apiGood.toSearch(res.goods, this.supplierId)
             }
           })
-          .catch((msg) => { alert(msg) })
+          .catch((msg) => { console.log(msg) })
       },
       goodCallback (val) {
         let len = this.goodOptions.length
@@ -178,7 +186,7 @@
               this.supplierOptions = api.toSearch(res.suppliers)
             }
           })
-          .catch((msg) => { alert(msg) })
+          .catch((msg) => { console.log(msg) })
       },
       clearData () {
         this.id = ''
@@ -210,13 +218,11 @@
           return false
         }
         if (this.resultType === 2 && (!this.percent.percent0)) {
-          console.log(this.percent0)
           alert('百分比不能为空！')
           return false
         }
         const callback = (res, msg) => {
           if (res.ret === 0) {
-            alert(msg)
             bus.$emit('getTichengList')
             this.clearData()
             this.goTarget('name')
@@ -240,7 +246,7 @@
           percentage5: this.percent.percent4 - 0
         })
           .then((res) => {
-            callback(res, '添加成功')
+            callback(res, '修改添加结算成功')
           })
           .catch((msg) => {
             alert(msg)
