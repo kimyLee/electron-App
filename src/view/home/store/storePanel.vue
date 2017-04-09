@@ -35,7 +35,7 @@
     </el-col>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
   import myInput from '@/components/myInput'
   import myDate from '@/components/myDatePicker'
   import mySearch from '@/components/mySearchInput'
@@ -194,6 +194,7 @@
         this.supplierId = ''
         this.weight = 0
         this.pack = 0
+        this.unit = ''
       },
       goTarget (target) {
         document.getElementById(target).focus()
@@ -203,8 +204,11 @@
         for (let i = 0; i < len; i++) {
           if (this.supplierOptions[i].value === val) {
             this.supplier = this.supplierOptions[i].label
-            this.supplier_id = this.supplierOptions[i].value
-            document.getElementById('unit').focus()
+            this.supplierId = this.supplierOptions[i].value
+            // 防止一次跳2个
+            setTimeout(() => {
+              document.getElementById('unit').focus()
+            }, 100)
             return true
           }
         }

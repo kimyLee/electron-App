@@ -20,8 +20,8 @@ export default {
   getNowMoney: xhr.get.bind(null, '/suppliers/amount'),
   // 提成
   getTiCheng: xhr.get.bind(null, '/suppliers/settlement'),
-  setTiCheng: xhr.post.bind(null, '/suppliers/settlement'),
-  addTiCheng: xhr.del.bind(null, '/suppliers/settlement'),
+  setTiCheng: xhr.put.bind(null, '/suppliers/settlement'),
+  addTiCheng: xhr.post.bind(null, '/suppliers/settlement'),
   // 数据转化也写在这里， 这样就不用再组件里面写数据处理
   toSearch (data) {
     const len = data.length

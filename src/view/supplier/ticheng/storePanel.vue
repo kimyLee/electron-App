@@ -3,24 +3,38 @@
     <el-col :span="6">
       <div class="my-panel" style="padding: 0">
         <div class="my-panel-header">商品管理</div>
-        <my-input text="供货商" v-model="name" id="name" next="code" ></my-input>
-        <my-input text="商品名称" v-model="name" id="name" next="code" ></my-input>
-        <my-input text="包装费" v-model="name" id="name" next="code" ></my-input>
-        <my-input text="过磅费" v-model="name" id="name" next="code" ></my-input>
+        <my-search text="商品名称"
+                   id="good_id"
+                   v-model="id"
+                   :method="searchGood"
+                   :callback="goodCallback"
+                   :options="goodOptions">
+        </my-search>
+        <my-search text="供应商"
+                   id="supplier_id"
+                   w
+                   v-model="supplierId"
+                   :method="searchId"
+                   :callback="supplierCallback"
+                   :options="supplierOptions">
+        </my-search>
+        <my-input text="包装费" v-model="pack" id="pack" next="code" disable></my-input>
+        <my-input text="过磅费" v-model="weight" id="weight" next="code" disable></my-input>
         <my-search text="结算方式"
                    v-model="resultType"
                    :options="TypeList"
-                   :callback="callback"
+                   :callback="function(){}"
                    no-search></my-search>
-        <my-input text="件数提成" v-model="name" id="name" next="code" ></my-input>
+        <my-input text="件数提成" v-model="unitFee" id="unitFee" next="code" :disable="resultType===2"></my-input>
         <div class="input-group" v-for="(item, $index) in 5">
           <div class="input-item">
             单价{{$index}}<br/>
-            <input type="text" class="form-input" />
+            <input type="text" class="form-input" v-model="price['price' + $index]"
+                   :readonly="resultType===1 || $index ===0"/>
           </div>
           <div class="input-item-right">
             百分比(%)<br/>
-            <input type="text" class="form-input" />
+            <input type="text" class="form-input" v-model="percent['percent' + $index]" :readonly="resultType===1"/>
           </div>
         </div>
         <div class="btn-panel">
@@ -28,7 +42,7 @@
                @keyup.down="goTarget('cus_del')"
                @keyup.up="goTarget('cus_credit')">
             <el-button type="primary" id='good_sure'
-                       @click.stop="addStore">{{selected ? '修改' : '添加'}}
+                       @click.stop="addTicheng">{{selected ? '修改' : '添加'}}
             </el-button>
           </div>
           <div class="btnItem"
@@ -46,27 +60,42 @@
   import myInput from '@/components/myInput'
   import myDate from '@/components/myDatePicker'
   import mySearch from '@/components/mySearchInput'
-  import api from '@/services/home'
-  import apiSupplier from '@/services/supplier'
+  import api from '@/services/supplier'
+  import apiGood from '@/services/home'
   import bus from '@/bus'
 
   export default {
     data () {
       return {
         id: '',
-        name: '',
-        code: '',
-        origin: 0,
-        supplier: '',
         supplierId: '',
-        unit: '',
-        weight: 0,
-        pack: 0,
+        supplier: '',
+        name: '',
+        weight: '',
+        pack: '',
+        goodOptions: [],
         supplierOptions: [],
+        resultType: 1,
         TypeList: [
           {label: '按件', value: 1},
           {label: '按百分比', value: 2}
         ],
+        price: {
+          price0: 0,
+          price1: '',
+          price2: '',
+          price3: '',
+          price4: ''
+        },
+        percent: {
+          percent0: '',
+          percent1: '',
+          percent2: '',
+          percent3: '',
+          percent4: ''
+        },
+        unitFee: '',
+        notClearGood: false,
         selected: false
       }
     },
@@ -77,13 +106,12 @@
     },
     mounted: function () {
       this.$nextTick(function () {
-        bus.$on('storeRender', (row) => {
+        bus.$on('tichengRender', (row) => {
           this.selected = row.index >= 0
           if (this.selected) {
             this.id = row.id
             this.name = row.name
             this.code = row.spell
-            this.origin = row.inventory
             this.supplier = row.supplier
             this.supplierId = row.supplierId
             this.weight = row.weighFee
@@ -96,77 +124,127 @@
       })
     },
     methods: {
-      addStore () {
-        if (!this.name) {
-          alert('商品名称不能为空！')
-          return false
+      supplierCallback (val) {
+        if (!this.notClearGood) {
+          this.id = ''
+          this.name = ''
+          this.pack = ''
+          this.weight = ''
         }
-        if (!this.code) {
-          alert('拼音码不能为空！')
-          return false
+        let len = this.supplierOptions.length
+        for (let i = 0; i < len; i++) {
+          if (this.supplierOptions[i].value === val) {
+            this.supplier = this.supplierOptions[i].label
+            this.supplierId = this.supplierOptions[i].value
+            setTimeout(() => {
+              document.getElementById('good_id').focus()
+            }, 100)
+            return true
+          }
         }
-        if (this.origin === '') {
-          alert('库存初始不能为空！')
+        this.notClearGood = false
+      },
+      // 搜索商品
+      searchGood (key) {
+        apiGood.getSearch({key: key || ''})
+          .then((res) => {
+            if (res.ret === 0) {
+              this.goodOptions = apiGood.toSearch(res.goods, this.supplierId)
+            }
+          })
+          .catch((msg) => { alert(msg) })
+      },
+      goodCallback (val) {
+        let len = this.goodOptions.length
+        for (let i = 0; i < len; i++) {
+          if (this.goodOptions[i].value === val) {
+            this.name = this.goodOptions[i].name
+            this.id = this.goodOptions[i].value
+            this.pack = this.goodOptions[i].pack
+            this.weight = this.goodOptions[i].weight
+            this.notClearGood = true
+            this.supplierId = this.goodOptions[i].supplierId
+            this.supplier = this.goodOptions[i].supplier
+            // document.getElementById('unit').focus()
+            return true
+          }
+        }
+      },
+      // 搜索供应商
+      searchId (key) {
+        api.getSupplier({key: key || ''})
+          .then((res) => {
+            if (res.ret === 0) {
+              this.supplierOptions = api.toSearch(res.suppliers)
+            }
+          })
+          .catch((msg) => { alert(msg) })
+      },
+      clearData () {
+        this.id = ''
+        this.name = ''
+        this.code = ''
+        this.supplier = ''
+        this.supplierId = ''
+        this.weight = ''
+        this.pack = ''
+      },
+      goTarget (target) {
+        document.getElementById(target).focus()
+      },
+      addTicheng () {
+        if (!(this.name && this.id)) {
+          alert('商品不能为空！请重新选择')
           return false
         }
         if (!(this.supplier && this.supplierId)) {
           alert('供应商不能为空！请重新选择')
           return false
         }
-        if (this.weight === '') {
-          alert('过磅费不能为空！')
+        if (!this.resultType) {
+          alert('结算方式不能为空！')
           return false
         }
-        if (this.pack === '') {
-          alert('包装费不能为空！')
+        if (this.resultType === 1 && (!this.unitFee)) {
+          alert('件数提成不能为空或低于0！')
           return false
         }
-        if (!this.unit) {
-          alert('单位不能为空！')
+        if (this.resultType === 2 && (!this.percent.percent0)) {
+          console.log(this.percent0)
+          alert('百分比不能为空！')
           return false
         }
         const callback = (res, msg) => {
           if (res.ret === 0) {
             alert(msg)
-            bus.$emit('getStoreList')
+            bus.$emit('getTichengList')
             this.clearData()
             this.goTarget('name')
           }
         }
-        if (this.selected) {
-          if (confirm('确定修改该商品信息？')) {
-            api.updateGood({
-              id: this.id,
-              spell: this.code,
-              name: this.name,
-              unit: this.unit,
-              weighFee: this.weight - 0,
-              packFee: this.pack - 0,
-              supplier: this.supplier,
-              supplierId: this.supplierId,
-              inventory: this.origin - 0
-            })
-              .then((res) => { callback(res, '修改成功') })
-              .catch((msg) => { alert(msg) })
-          }
-        } else {
-          api.addGood({
-            spell: this.code,
-            name: this.name,
-            unit: this.unit,
-            weighFee: this.weight - 0,
-            packFee: this.pack - 0,
-            supplier: this.supplier,
-            supplierId: this.supplierId,
-            inventory: this.origin - 0
+        api.addTiCheng({
+          id: this.id,
+          weighFee: this.weight - 0,
+          packFee: this.pack - 0,
+          type: this.resultType,
+          unitFee: this.unitFee - 0,
+          price1: this.price.price0 - 0,
+          price2: this.price.price1 - 0,
+          price3: this.price.price2 - 0,
+          price4: this.price.price3 - 0,
+          price5: this.price.price4 - 0,
+          percentage1: this.percent.percent0 - 0,
+          percentage2: this.percent.percent1 - 0,
+          percentage3: this.percent.percent2 - 0,
+          percentage4: this.percent.percent3 - 0,
+          percentage5: this.percent.percent4 - 0
+        })
+          .then((res) => {
+            callback(res, '添加成功')
           })
-            .then((res) => {
-              callback(res, '添加成功')
-            })
-            .catch((msg) => {
-              alert(msg)
-            })
-        }
+          .catch((msg) => {
+            alert(msg)
+          })
       },
       delStore () {
         if (this.selected) {
@@ -184,39 +262,6 @@
         } else {
           if (confirm('确定清空当前操作？')) {
             this.clearData()
-          }
-        }
-      },
-      searchId (key) {
-        apiSupplier.getSupplier({key: key || ''})
-          .then((res) => {
-            if (res.ret === 0) {
-              this.supplierOptions = apiSupplier.toSearch(res.suppliers)
-            }
-          })
-          .catch((msg) => { alert(msg) })
-      },
-      clearData () {
-        this.id = ''
-        this.name = ''
-        this.code = ''
-        this.origin = 0
-        this.supplier = ''
-        this.supplierId = ''
-        this.weight = 0
-        this.pack = 0
-      },
-      goTarget (target) {
-        document.getElementById(target).focus()
-      },
-      supplierCallback (val) {
-        let len = this.supplierOptions.length
-        for (let i = 0; i < len; i++) {
-          if (this.supplierOptions[i].value === val) {
-            this.supplier = this.supplierOptions[i].label
-            this.supplier_id = this.supplierOptions[i].value
-            document.getElementById('unit').focus()
-            return true
           }
         }
       }

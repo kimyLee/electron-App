@@ -13,8 +13,20 @@
         <el-table-column v-for="(item, $index) in tableConfig"
                          :prop="item.prop"
                          :label="item.label"
+                         :formatter="getStatus(item.label)"
                          :width="item.width">
         </el-table-column>
+        <el-table-column
+                         :prop="tableType.prop"
+                         :label="tableType.label"
+                         :width="tableType.width">
+          <template v-if="item.label==='提成结算'" scope="scope">
+            <p v-if="scope.row.type===1">件数提成：{{scope.row.unitFee}}</p>
+            <div v-if="scope.row.type===2">
+            </div>
+          </template>
+        </el-table-column>
+
       </el-table>
     </el-col>
     <!--操作-->
@@ -22,9 +34,9 @@
   </el-row>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
   import store from './storePanel'
-  import api from '@/services/home'
+  import api from '@/services/supplier'
   import bus from '@/bus'
 
   export default {
@@ -36,9 +48,9 @@
           {label: '供应商', prop: 'supplier'},
           {label: '包装费', prop: 'packFee'},
           {label: '过磅费', prop: 'weighFee'},
-          {label: '提成方式', prop: 'type'},
-          {label: '提成结算', prop: ''}
+          {label: '提成方式', prop: 'type'}
         ],
+        tableType: {label: '提成结算', prop: ''},
         tableData: []
       }
     },
@@ -47,31 +59,34 @@
     },
     mounted: function () {
       this.$nextTick(function () {
-        this.getStore()
-        bus.$on('getStoreList', this.getStore)
+        this.getTicheng()
+        bus.$on('getTichengList', this.getTicheng)
       })
     },
     methods: {
-      getStore () {
+      getTicheng () {
         const self = this
-        api.getStore({pageNum: this.page.num, pageSize: this.page.size})
+        api.getTiCheng()
           .then((data) => {
             if (data.ret === 0) {
-              self.tableData = data.customers || []
-              self.page.total = data.total || 0
+              self.tableData = data.settlements || []
             }
           })
       },
-      pageChange (page) {
-        this.page.num = page
-        this.getStore()
+      // 状态过滤函数
+      getStatus (label) {
+        if (label === '提成方式') {
+          return function (row) {
+            return row.type === 1 ? '按件' : row.type === 2 ? '按百分比' : ''
+          }
+        }
+        return null
       },
       selectItem (row) {
         this.index = this.index === row.id ? -1 : row.id
         bus.$emit('storeRender', Object.assign({}, row, {index: this.index}))
       },
       setClass (row) {
-        console.log(row, this.index)
         return row.id === this.index ? 'active' : ''
       }
     }

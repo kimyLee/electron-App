@@ -26,6 +26,7 @@ export default {
     method: Function,
     callback: Function,
     options: Array,
+    w: Boolean,
     noSearch: Boolean
   },
   data () {
@@ -44,9 +45,12 @@ export default {
     val (val) {
       this.$emit('input', val)
     },
-    value () {
+    value (val) {
       if (this.value === '') {
         this.val = ''
+      }
+      if (this.w) {
+        this.val = val
       }
     }
   }

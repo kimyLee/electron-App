@@ -3,9 +3,9 @@
         <span class="text">{{text}}</span>
         <input class="form-input" :id="id" :value="value" :readonly="disable?'readonly':false"
                @input="updateValue($event.target.value)"
-               @keyup.up="go('pre')"
-               @keyup.down="go('next')"
-               @keyup.enter="go('next')"
+               @keyup.up.stop="go('pre')"
+               @keyup.down.stop="go('next')"
+               @keyup.enter.stop="go('next')"
         >
     </div>
 </template>
@@ -26,6 +26,7 @@
           this.$emit('input', value)
         },
         go (dir) {
+          console.log(this.id, this.next)
           if (dir === 'pre') {
             this.pre && this.pre[0] === '!' && document.querySelector('#' + this.pre.substring(1) + ' input').focus()
             this.pre && this.pre[0] !== '!' && document.getElementById(this.pre).focus()
