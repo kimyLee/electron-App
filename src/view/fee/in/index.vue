@@ -32,12 +32,9 @@
     data () {
       return {
         tableConfig: [
-          {label: 'ID', prop: 'name'},
-          {label: '客户名', prop: 'name'},
-          {label: '拼音码', prop: 'name'},
-          {label: '总欠', prop: 'name'},
-          {label: '手机号', prop: 'name'},
-          {label: '欠费额度', prop: 'name'}
+          {label: '日期', prop: 'name'},
+          {label: '备注', prop: 'name'},
+          {label: '金额', prop: 'name'}
         ],
         tableData: [{
           date: '2016-05-03',
@@ -59,14 +56,6 @@
           date: '2016-05-08',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
         }]
       }
     },
@@ -81,7 +70,3 @@
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-  .el-table::before {width: 0 ;  height: 0;}
-</style>

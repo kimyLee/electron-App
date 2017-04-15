@@ -1,59 +1,60 @@
 <template>
     <!--操作-->
     <el-col :span="6">
-      <div class="my-panel" style="padding: 0">
-        <div class="my-panel-header">商品管理</div>
-        <my-search text="商品名称"
-                   id="good_id"
-                   w
-                   v-model="id"
-                   :method="searchGood"
-                   :callback="goodCallback"
-                   :options="goodOptions">
-        </my-search>
-        <my-search text="供应商"
-                   id="supplier_id"
-                   w
-                   v-model="supplierId"
-                   :method="searchId"
-                   :callback="supplierCallback"
-                   :options="supplierOptions">
-        </my-search>
-        <my-input text="包装费" v-model="pack" id="pack" next="code" disable></my-input>
-        <my-input text="过磅费" v-model="weight" id="weight" next="code" disable></my-input>
-        <my-search text="结算方式"
-                   v-model="resultType"
-                   :options="TypeList"
-                   :callback="function(){}"
-                   no-search></my-search>
-        <my-input text="件数提成" v-model="unitFee" id="unitFee" next="code" :disable="resultType===2"></my-input>
-        <div class="input-group" v-for="(item, $index) in 5">
-          <div class="input-item">
-            单价{{$index}}<br/>
-            <input type="text" class="form-input" v-model="price['price' + $index]"
-                   :readonly="resultType===1 || $index ===0"/>
-          </div>
-          <div class="input-item-right">
-            百分比(%)<br/>
-            <input type="text" class="form-input" v-model="percent['percent' + $index]" :readonly="resultType===1"/>
-          </div>
+        <div class="my-panel" style="padding: 0">
+            <div class="my-panel-header">商品管理</div>
+            <my-search text="商品名称"
+                       id="good_id"
+                       w
+                       v-model="id"
+                       :method="searchGood"
+                       :callback="goodCallback"
+                       :options="goodOptions">
+            </my-search>
+            <my-search text="供应商"
+                       id="supplier_id"
+                       w
+                       v-model="supplierId"
+                       :method="searchId"
+                       :callback="supplierCallback"
+                       :options="supplierOptions">
+            </my-search>
+            <my-input text="包装费" v-model="pack" id="pack" next="code" disable></my-input>
+            <my-input text="过磅费" v-model="weight" id="weight" next="code" disable></my-input>
+            <my-search text="结算方式"
+                       v-model="resultType"
+                       :options="TypeList"
+                       :callback="function(){}"
+                       no-search></my-search>
+            <my-input text="件数提成" v-model="unitFee" id="unitFee" next="code" :disable="resultType===2"></my-input>
+            <div class="input-group" v-for="(item, $index) in 5">
+                <div class="input-item">
+                    单价{{$index}}<br/>
+                    <input type="text" class="form-input" v-model="price['price' + $index]"
+                           :readonly="resultType===1 || $index ===0"/>
+                </div>
+                <div class="input-item-right">
+                    百分比(%)<br/>
+                    <input type="text" class="form-input" v-model="percent['percent' + $index]"
+                           :readonly="resultType===1"/>
+                </div>
+            </div>
+            <div class="btn-panel">
+                <div class="btnItem"
+                     @keyup.down="goTarget('cus_del')"
+                     @keyup.up="goTarget('cus_credit')">
+                    <el-button type="primary" id='good_sure'
+                               @click.stop="addTicheng">{{selected ? '修改' : '添加'}}
+                    </el-button>
+                </div>
+                <div class="btnItem"
+                     @keyup.up="goTarget('good_sure')">
+                    <el-button type="danger" id='good_del'
+                               @click.stop="delStore">{{selected ? '删除' : '取消'}}
+                    </el-button>
+                </div>
+            </div>
         </div>
-        <div class="btn-panel">
-          <div class="btnItem"
-               @keyup.down="goTarget('cus_del')"
-               @keyup.up="goTarget('cus_credit')">
-            <el-button type="primary" id='good_sure'
-                       @click.stop="addTicheng">{{selected ? '修改' : '添加'}}
-            </el-button>
-          </div>
-          <div class="btnItem"
-               @keyup.up="goTarget('good_sure')">
-            <el-button type="danger" id='good_del'
-                       @click.stop="delStore">{{selected ? '删除' : '取消'}}
-            </el-button>
-          </div>
-        </div>
-      </div>
     </el-col>
 </template>
 
@@ -78,9 +79,9 @@
         supplierOptions: [],
         resultType: 1,
         TypeList: [
-          {label: '', value: ''},
           {label: '按件', value: 1},
-          {label: '按百分比', value: 2}
+          {label: '按百分比', value: 2},
+          {label: '', value: ''}
         ],
         price: {
           price0: 0,
@@ -160,7 +161,9 @@
               this.goodOptions = apiGood.toSearch(res.goods, this.supplierId)
             }
           })
-          .catch((msg) => { console.log(msg) })
+          .catch((msg) => {
+            console.log(msg)
+          })
       },
       goodCallback (val) {
         let len = this.goodOptions.length
@@ -186,7 +189,9 @@
               this.supplierOptions = api.toSearch(res.suppliers)
             }
           })
-          .catch((msg) => { console.log(msg) })
+          .catch((msg) => {
+            console.log(msg)
+          })
       },
       clearData () {
         this.id = ''
@@ -196,6 +201,22 @@
         this.supplierId = ''
         this.weight = ''
         this.pack = ''
+        this.unitFee = ''
+        this.price = {
+          price0: 0,
+          price1: '',
+          price2: '',
+          price3: '',
+          price4: ''
+        }
+        this.percent = {
+          percent0: '',
+          percent1: '',
+          percent2: '',
+          percent3: '',
+          percent4: ''
+        }
+        this.selected = false
       },
       goTarget (target) {
         document.getElementById(target).focus()
@@ -223,9 +244,12 @@
         }
         const callback = (res, msg) => {
           if (res.ret === 0) {
+            alert('添加修改成功')
             bus.$emit('getTichengList')
             this.clearData()
-            this.goTarget('name')
+            this.$nextTick(() => {
+              document.getElementById('good_id').focus()
+            })
           }
         }
         api.addTiCheng({
@@ -248,8 +272,9 @@
           .then((res) => {
             callback(res, '修改添加结算成功')
           })
-          .catch((msg) => {
-            alert(msg)
+          .catch((error) => {
+            console.log(error)
+            alert(123)
           })
       },
       delStore () {
@@ -263,7 +288,9 @@
                   this.clearData()
                 }
               })
-              .catch((msg) => { alert(msg) })
+              .catch((msg) => {
+                alert(msg)
+              })
           }
         } else {
           if (confirm('确定清空当前操作？')) {
@@ -277,9 +304,30 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .input-group {margin-top: 5px}
-  .input-item{width: 120px;display: inline-block ;padding: 0 10px;font-size: 14px;font-weight: bold }
-  .input-item input{width: 100% }
-  .input-item-right{width: 70px;display: inline-block;font-size: 14px;font-weight: bold}
-  .input-item-right input{width:100%}
+    .input-group {
+        margin-top: 5px
+    }
+
+    .input-item {
+        width: 120px;
+        display: inline-block;
+        padding: 0 10px;
+        font-size: 14px;
+        font-weight: bold
+    }
+
+    .input-item input {
+        width: 100%
+    }
+
+    .input-item-right {
+        width: 70px;
+        display: inline-block;
+        font-size: 14px;
+        font-weight: bold
+    }
+
+    .input-item-right input {
+        width: 100%
+    }
 </style>

@@ -20,9 +20,14 @@
                          :prop="tableType.prop"
                          :label="tableType.label"
                          :width="tableType.width">
-          <template v-if="item.label==='提成结算'" scope="scope">
+          <template  scope="scope">
             <p v-if="scope.row.type===1">件数提成：{{scope.row.unitFee}}</p>
             <div v-if="scope.row.type===2">
+              <p>单价1: {{scope.row.price1}}&nbsp;&nbsp;&nbsp;百分比:{{scope.row.percentage1}}</p>
+              <p v-show="scope.row.price2">单价2: {{scope.row.price2}}&nbsp;&nbsp;&nbsp;百分比:{{scope.row.percentage2}}</p>
+              <p v-show="scope.row.price3">单价3: {{scope.row.price3}}&nbsp;&nbsp;&nbsp;百分比:{{scope.row.percentage3}}</p>
+              <p v-show="scope.row.price4">单价4: {{scope.row.price4}}&nbsp;&nbsp;&nbsp;百分比:{{scope.row.percentage4}}</p>
+              <p v-show="scope.row.price5">单价5: {{scope.row.price5}}&nbsp;&nbsp;&nbsp;百分比:{{scope.row.percentage5}}</p>
             </div>
           </template>
         </el-table-column>
@@ -44,13 +49,13 @@
       return {
         index: -1,
         tableConfig: [
-          {label: '名称', prop: 'name'},
-          {label: '供应商', prop: 'supplier'},
-          {label: '包装费', prop: 'packFee'},
-          {label: '过磅费', prop: 'weighFee'},
-          {label: '提成方式', prop: 'type'}
+          {label: '名称', prop: 'name', width: 100},
+          {label: '供应商', prop: 'supplier', width: 100},
+          {label: '包装费', prop: 'packFee', width: 100},
+          {label: '过磅费', prop: 'weighFee', width: 100},
+          {label: '提成方式', prop: 'type', width: 100}
         ],
-        tableType: {label: '提成结算', prop: ''},
+        tableType: {label: '提成结算(元/%)', prop: ''},
         tableData: []
       }
     },
@@ -70,6 +75,7 @@
           .then((data) => {
             if (data.ret === 0) {
               self.tableData = data.settlements || []
+              this.index = -1
             }
           })
       },
