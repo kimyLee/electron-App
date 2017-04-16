@@ -17,7 +17,7 @@ hr{border: 1px solid #ccc; border-top: none }
 .my-panel .el-button{height: 25px;  line-height: 25px;  padding: 0 15px;  border-radius: 0;}
 .my-panel .btnItem{display: inline-block}
 .my-panel .el-button:focus{ border:2px solid #586C94}
-.my-panel .el-button.el-button--primary:focus{background-color: #286090; border:2px solid red}
+.my-panel .el-button.el-button--primary:focus{background-color: #286090; border:2px solid #666}
 .my-panel .el-button.el-button--primary{background-color: #337ab7;border-color:#337ab7 }
 .my-panel .el-button.el-button--primary:hover{background-color: #286090;border-color:#286090 }
 /*日期选择器*/

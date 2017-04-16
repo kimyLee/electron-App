@@ -6,7 +6,7 @@
           <el-col :span="12">
             <my-date text="开始日期" v-model="date2"></my-date>
             <my-date text="销售日期" v-model="date2"></my-date>
-            <my-search text="单据类型" v-model="store2" :options="options1" no-search></my-search>
+            <my-input text="商品名称" v-model="store1"></my-input>
           </el-col>
           <el-col :span="12">
             <my-search text="供应商" v-model="store2" :method="searchId" :options="options"></my-search>
@@ -15,9 +15,8 @@
           </el-col>
         </el-row>
         <div class="btn-panel">
-          <el-button type="primary">删除</el-button>
-          <el-button type="primary">查询删除</el-button>
-          <el-button type="primary">补打单据</el-button>
+          <el-button type="primary">查询</el-button>
+          <el-button type="primary">打印</el-button>
         </div>
       </div>
       <div class="my-panel" style="margin-top: 2px">
@@ -30,6 +29,7 @@
             :row-class-name="choose"
             style="width: 100%;font-size: 12px">
             <el-table-column v-for="(item, $index) in tableConfig"
+                             :key="$index"
                              :prop="item.prop"
                              :label="item.label"
                              :width="item.width"
@@ -56,13 +56,9 @@
         store1: '',
         store2: '',
         date2: '',
-        options1: [
-          {label: '名称', value: '1'},
-          {label: '名称', value: '2'}
-        ],
         options: [],
         tableConfig: [
-          {label: '名称', prop: 'name'},
+          {label: '商品', prop: 'name'},
           {label: '件数', prop: 'name'},
           {label: '数量', prop: 'name'},
           {label: '单位', prop: 'name'},

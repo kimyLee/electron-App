@@ -9,65 +9,33 @@
         border
         style="width: 100%;font-size: 12px">
         <el-table-column v-for="(item, $index) in tableConfig"
-          :prop="item.prop"
-          :label="item.label"
-          :width="item.width">
+                         :key="$index"
+                         :prop="item.prop"
+                         :label="item.label"
+                         :formatter="getStatus(item.label)"
+                         :width="item.width">
         </el-table-column>
       </el-table>
-      <div style="text-align: right">
-        <el-pagination
-          layout="prev, pager, next"
-          :total="1000">
-        </el-pagination>
-      </div>
     </el-col>
     <!--操作-->
     <store></store>
   </el-row>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
   import store from './storePanel'
+  import api from '@/services/fee'
+  import bus from '@/bus'
+
   export default {
     data () {
       return {
         tableConfig: [
-          {label: 'ID', prop: 'name'},
-          {label: '客户名', prop: 'name'},
-          {label: '拼音码', prop: 'name'},
-          {label: '总欠', prop: 'name'},
-          {label: '手机号', prop: 'name'},
-          {label: '欠费额度', prop: 'name'}
+          {label: '日期', prop: 'date'},
+          {label: '备注', prop: 'remark'},
+          {label: '金额', prop: 'money'}
         ],
-        tableData: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }]
+        tableData: []
       }
     },
     components: {
@@ -75,13 +43,31 @@
     },
     mounted: function () {
       this.$nextTick(function () {
-        console.log(this.$route)
+        this.getData()
+        bus.$on('getOutList', this.getData)
       })
+    },
+    methods: {
+      getStatus (label) {
+        if (label === '日期') {
+          return function (row) {
+            return (new Date(row.date)).Format('yyyy-MM-dd')
+          }
+        }
+        return null
+      },
+      getData () {
+        api.getOut()
+          .then((data) => {
+            if (data.ret === 0) {
+              this.tableData = data.data || []
+            }
+          })
+          .catch((err) => {
+            alert(err)
+          })
+      }
     }
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-  .el-table::before {width: 0 ;  height: 0;}
-</style>

@@ -3,6 +3,7 @@
     <span class="text">{{text}}</span>
     <el-select v-model="val"
                :id="id"
+               clearable
                :filterable="!noSearch"
                :remote="!noSearch"
                placeholder="请选择"

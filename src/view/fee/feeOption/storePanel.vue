@@ -36,6 +36,7 @@
   import api from '@/services/fee'
   import apiSupplier from '@/services/supplier'
   import bus from '@/bus'
+  import common from '@/until'
 
   export default {
     data () {
@@ -110,11 +111,7 @@
         }
       },
       goTarget (target) {
-        if (target[0] === '!') {
-          document.querySelector('#' + target.substring(1) + ' input').focus()
-        } else {
-          document.getElementById(target).focus()
-        }
+        common.goTarget(target)
       },
       addFeeType () {
         if (!this.name) {

@@ -1,93 +1,136 @@
 <template>
-  <el-row>
+  <el-row class="customer">
     <!--数据展示-->
     <el-col :span="12">
       <el-table
         :data="tableData"
-        height="700"
+        height="670"
         stripe
         border
+        :row-class-name="setClass"
+        @row-click="selectItem"
         style="width: 100%;font-size: 12px">
         <el-table-column v-for="(item, $index) in tableConfig"
-          :prop="item.prop"
-          :label="item.label"
-          :width="item.width">
+                         :key="$index"
+                         :prop="item.prop"
+                         :label="item.label"
+                         :formatter="getStatus(item.label)"
+                         :width="item.width">
         </el-table-column>
       </el-table>
       <p style="font-size: 16px;font-weight: bold">
-        <span style="display: inline-block;width: 150px">件数：30</span>
-        <span style="display: inline-block;width: 150px">数量：30</span>
-        <span style="display: inline-block;width: 150px">件数：30</span>
+        <span style="display: inline-block;width: 150px">件数：{{totalCount}}</span>
+        <span style="display: inline-block;width: 150px">数量：{{totalCountUnit}}</span>
+        <span style="display: inline-block;width: 150px">金额：{{totalMoney}}</span>
       </p>
     </el-col>
-    <filter-panel></filter-panel>
+    <!--操作-->
+    <store></store>
   </el-row>
 </template>
 
-<script>
-  import filterPanel from './filterPanel'
+<script type="text/ecmascript-6">
+  import store from './storePanel'
+  import api from '@/services/home'
+  import bus from '@/bus'
   export default {
     data () {
       return {
+        index: -1,
         tableConfig: [
-          {label: '商品', prop: 'name'},
-          {label: '件数', prop: 'name'},
-          {label: '数量', prop: 'name'},
-          {label: '单位', prop: 'name'},
-          {label: '单价', prop: 'name'},
-          {label: '包装费', prop: 'name'},
-          {label: '过磅费', prop: 'name'},
-          {label: '供应商', prop: 'name'},
-          {label: '合计', prop: 'name'}
+          {label: '名称', prop: 'name'},
+          {label: '件数', prop: 'count'},
+          {label: '数量', prop: 'countUnit'},
+          {label: '均价', prop: 'price'},
+          {label: '单位', prop: 'unit'},
+          {label: '过磅费', prop: 'weight'},
+          {label: '包装费', prop: 'pack'},
+          {label: '供应商', prop: 'supplier'},
+          {label: '合计', prop: 'totalMoney'}
         ],
-        tableData: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }]
+        tableData: [],
+        originData: [],
+        totalCount: 0,
+        totalCountUnit: 0,
+        totalMoney: 0,
+        supplierId: '',
+        goodId: ''
       }
     },
     components: {
-      filterPanel
+      store
+    },
+    watch: {
+      tableData: 'countTotal'
+    },
+    mounted: function () {
+      this.$nextTick(function () {
+        bus.$off('getGoodRender').$on('getGoodRender', (obj) => {
+          this.getList(obj)
+        })
+        bus.$off('renderFilter').$on('renderFilter', (obj) => {
+          this.supplierId = obj.supplierId
+          this.goodId = obj.goodId
+          this.FilterTable(this.originData)
+        })
+      })
     },
     methods: {
-      choose (row, index) {
-        console.log(row, index)
-        if (index % 2 === 0) {
-          return 'active'
-        } else {
-          return ''
+      countTotal (arr) {
+        this.totalCount = 0
+        this.totalCountUnit = 0
+        this.totalMoney = 0
+        for (let i = arr.length; i--;) {
+          this.totalCount += arr[i].count
+          this.totalCountUnit += arr[i].countUnit
+          this.totalMoney += arr[i].totalMoney
         }
+        this.totalMoney = this.totalMoney.toFixed(2)
+      },
+      FilterTable (arr) {
+        this.tableData = arr.filter((e) => {
+          return (e.id === this.goodId || !this.goodId) &&
+            (e.supplierId === this.supplierId || !this.supplierId)
+        })
+      },
+      getList (obj) {
+        const today = (new Date()).Format('yyyy-MM-dd')
+        // 可以传入 delete 参数
+        api.checkOrder({
+          startDate: (obj && obj.begin) || today,
+          endDate: (obj && obj.end) || today
+        })
+          .then((data) => {
+            if (data.ret === 0) {
+              this.originData = data.list || []
+              this.FilterTable(this.originData)
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      },
+      // 状态过滤函数
+      getStatus (label) {
+        if (label === '均价') {
+          return function (row) {
+            return ((row.totalMoney - row.weight - row.pack) / row.countUnit).toFixed(2)
+          }
+        }
+        return null
+      },
+      selectItem (row) {
+        this.index = this.index === row.id ? -1 : row.id
+        bus.$emit('getGoodDetail', Object.assign({}, row, {select: this.index}))
+      },
+      setClass (row) {
+        return (row.id === this.index ? 'active' : '')
       }
     }
   }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
+<style>
+  .customer tr {
+    cursor: pointer
+  }
 </style>

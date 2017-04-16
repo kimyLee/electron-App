@@ -8,7 +8,9 @@
         stripe
         border
         style="width: 100%;font-size: 12px">
-        <el-table-column v-for="(item, $index) in tableConfig"
+        <el-table-column
+          v-for="(item, $index) in tableConfig"
+          :key="$index"
           :prop="item.prop"
           :label="item.label"
           :width="item.width">

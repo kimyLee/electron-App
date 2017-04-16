@@ -16,6 +16,9 @@ import feeOut from '@/view/fee/out'
 import supplier from '@/view/supplier/supplier'
 import transforms from '@/view/supplier/transform'
 import ticheng from '@/view/supplier/ticheng'
+import goodIn from '@/view/origin/inGood'
+import goodOut from '@/view/origin/outGood'
+import goodDetail from '@/view/origin/detail'
 
 Vue.use(Router)
 
@@ -101,6 +104,21 @@ export default new Router({
       path: '/ticheng',
       name: 'ticheng',
       component: ticheng
+    },
+    {
+      path: '/goodIn',
+      name: 'goodIn',
+      component: goodIn
+    },
+    {
+      path: '/goodOut',
+      name: 'goodOut',
+      component: goodOut
+    },
+    {
+      path: '/goodDetail',
+      name: 'goodDetail',
+      component: goodDetail
     }
   ]
 })

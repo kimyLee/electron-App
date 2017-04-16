@@ -1,53 +1,75 @@
 <template>
-    <!--操作-->
-    <el-col :span="6">
-      <div class="my-panel" style="padding: 0">
-        <div class="my-panel-header">收入管理</div>
-        <my-input text="客户名" v-model="store1"></my-input>
-        <my-input text="拼音码" v-model="store1"></my-input>
-        <my-input text="总欠金额" v-model="store1"></my-input>
-        <my-search text="手机号" v-model="store2" :method="searchId" :options="options"></my-search>
-        <my-input text="信用额度" v-model="store1"></my-input>
-        <div class="btn-panel">
-          <el-button type="primary">添加</el-button>
-          <el-button>删除</el-button>
+  <!--操作-->
+  <el-col :span="6">
+    <div class="my-panel" style="padding: 0">
+      <div class="my-panel-header">收入管理</div>
+      <my-input text="收入备注" v-model="remark" id="in_remark" next="in_money"></my-input>
+      <my-input text="收入金额" v-model="money" id="in_money" next="btn" pre="in_remark"></my-input>
+      <div class="btn-panel">
+        <div class="btnItem"
+             @keyup.down="goTarget('cancel')"
+             @keyup.up="goTarget('in_money')">
+          <el-button type="primary" @click="addMoney" id="btn">添加</el-button>
+        </div>
+        <div class="btnItem"
+             @keyup.up="goTarget('btn')">
+          <el-button @click="cancel" id="cancel">取消</el-button>
         </div>
       </div>
-    </el-col>
+    </div>
+  </el-col>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
   import myInput from '@/components/myInput'
-  import myDate from '@/components/myDatePicker'
-  import mySearch from '@/components/mySearchInput'
+  import api from '@/services/fee'
+  import bus from '@/bus'
+  import common from '@/until'
+
   export default {
     data () {
       return {
-        date: '',
-        date2: '2017-12-01',
-        store1: '11',
-        store2: '22',
-        value8: '11',
-        options: [],
-        pickerOptions0: {
-          disabledDate (time) {
-            return time.getTime() > Date.now()
-          }
-        }
+        remark: '',
+        money: ''
       }
     },
     components: {
-      myInput,
-      mySearch,
-      myDate
+      myInput
     },
     watch: {
-      store1 () {}
+      store1 () {
+      }
     },
     methods: {
-      searchId (key) {
-        console.log(key)
-        this.options = [{value: key, label: key}, {value: key + '1122', label: key + '11'}]
+      addMoney () {
+        if (!this.remark) {
+          alert('收入备注不能为空')
+          return false
+        }
+        if (!this.money || isNaN(this.money)) {
+          alert('金额需为数字')
+          return false
+        }
+        api.addIn({
+          remark: this.remark,
+          money: this.money - 0
+        })
+          .then(() => {
+            alert('添加收入成功')
+            this.cancel()
+            document.getElementById('btn').blur()
+            bus.$emit('getInList')
+          })
+          .catch((err) => {
+            alert(err)
+          })
+      },
+      goTarget (target) {
+        common.goTarget(target)
+      },
+      cancel () {
+        this.remark = ''
+        this.money = ''
       }
     }
   }

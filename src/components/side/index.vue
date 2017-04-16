@@ -5,7 +5,7 @@
         <i class="el-icon-menu title-icon" ></i>
         <el-menu-item index="/">下单</el-menu-item>
         <el-menu-item index="/chaxun">销售查询</el-menu-item>
-        <el-menu-item index="/mingxi">销售明细</el-menu-item>
+        <el-menu-item index="/mingxi">单据明细</el-menu-item>
         <el-menu-item index="/store">商品管理</el-menu-item>
       </el-menu-item-group>
       <el-menu-item-group title="客户">
@@ -25,9 +25,9 @@
       </el-menu-item-group>
       <el-menu-item-group title="仓库" >
         <i class="el-icon-menu title-icon" ></i>
-        <el-menu-item index="/inGood">进货</el-menu-item>
-        <el-menu-item index="/lossGood">报损</el-menu-item>
-        <el-menu-item index="/detailGood">进出明细</el-menu-item>
+        <el-menu-item index="/goodIn">进货</el-menu-item>
+        <el-menu-item index="/goodOut">报损</el-menu-item>
+        <el-menu-item index="/goodDetail">进出明细</el-menu-item>
       </el-menu-item-group>
       <el-menu-item-group title="报表" >
         <i class="el-icon-menu title-icon" ></i>

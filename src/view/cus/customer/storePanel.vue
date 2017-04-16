@@ -75,6 +75,10 @@
       },
       delCustomer () {
         if (confirm('确定删除该客户信息？')) {
+          if (this.id === 1) {
+            alert('默认第一个为现金客户，不能删除')
+            return false
+          }
           api.delCustomer({id: this.id})
             .then((res) => {
               if (res.ret === 0) {

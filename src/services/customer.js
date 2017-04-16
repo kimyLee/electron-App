@@ -28,7 +28,7 @@ export default {
         name: data[i].name,
         loan: data[i].loan,
         credit: data[i].credit,
-        label: `${data[i].id}(${data[i].name})`
+        label: `${data[i].id} (${data[i].name})`
       })
     }
     return arr

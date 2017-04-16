@@ -16,6 +16,11 @@
                          :label="item.label"
                          :width="item.width">
         </el-table-column>
+        <el-table-column label="小计">
+          <template scope="scope">
+            {{(scope.row.price - 0) * scope.row.countUnit}}
+          </template>
+        </el-table-column>
       </el-table>
     </el-col>
     <!--操作-->
@@ -33,14 +38,12 @@
         index: -1,
         tableConfig: [
           {label: '名称', prop: 'gName'},
-          {label: '件数', prop: 'count'},
-          {label: '数量', prop: 'countUnit'},
+          {label: '拼音码', prop: 'gSpell'},
           {label: '单位', prop: 'unit'},
-          {label: '单价', prop: 'gPrice'},
-          {label: '过磅费', prop: 'gWeighFee'},
-          {label: '包装费', prop: 'gPackFee'},
           {label: '供应商', prop: 'gSupplier'},
-          {label: '合计', prop: 'money'}
+          {label: '单价', prop: 'price'},
+          {label: '件数', prop: 'count'},
+          {label: '数量', prop: 'countUnit'}
         ],
         tableData: []
       }
@@ -50,15 +53,8 @@
     },
     mounted: function () {
       this.$nextTick(function () {
-        bus.$off('addInGood').$on('addInGood', this.render)
+        bus.$on('addInGood', this.render)
       })
-    },
-    beforeRouteLeave  (to, from, next) {
-      if (this.tableData.length && !confirm('离开后页面信息将丢失，确认离开？')) {
-        next(false)
-      } else {
-        next()
-      }
     },
     methods: {
       render (arr) {

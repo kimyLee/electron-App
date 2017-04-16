@@ -13,6 +13,11 @@ export default {
   addStore: xhr.post.bind(null, '/goods/query'),
   getStore: xhr.get.bind(null, '/goods/query'),
   getSearch: xhr.get.bind(null, '/goods/search'),
+  // 下单
+  makeOrder: xhr.post.bind(null, '/sales/sale'),
+  // 销售查询
+  checkOrder: xhr.get.bind(null, '/sales/goodRecord'),
+  checkOrderById: xhr.get.bind(null, '/sales/good'),
   toSearch (data, supplierId) {
     const len = data.length
     let arr = []
@@ -23,6 +28,9 @@ export default {
           supplierId: data[i].supplierId,
           value: data[i].id,
           name: data[i].name,
+          unit: data[i].unit,
+          spell: data[i].spell,
+          inventory: data[i].inventory,
           pack: data[i].packFee,
           weight: data[i].weighFee,
           label: `${data[i].id}(${data[i].name})`
