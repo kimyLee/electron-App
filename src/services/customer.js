@@ -17,6 +17,10 @@ export default {
   getBorrowMoney: xhr.get.bind(null, '/customers/loandetails'),
   // 查询欠款
   checkLoan: xhr.get.bind(null, '/customers/loantotal'),
+  checkLoanById: xhr.get.bind(null, '/customers/loantotalById'),
+  // 供应商视角
+  checkLoanSupplier: xhr.get.bind(null, '/suppliers/loantotalSupplier'),
+  checkLoanByIdSupplier: xhr.get.bind(null, '/suppliers/loantotalByIdSupplier'),
   // 数据转化也写在这里， 这样就不用再组件里面写数据处理
   toSearch (data) {
     const len = data.length

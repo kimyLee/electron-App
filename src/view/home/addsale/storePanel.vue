@@ -1,73 +1,80 @@
 <template>
-  <!--操作-->
-  <el-col :span='6'>
-    <div class='my-panel' style='padding: 0'>
-      <div class='my-panel-header'>销售下单</div>
-      <my-search text="客户编号"
-                 id="cus_id"
-                 v-model="cus_id"
-                 :method="searchCustomer"
-                 :callback="customerCallback"
-                 :options="cusOptions">
-      </my-search>
-      <my-input text='拼音码' v-model='cus_spell' disable></my-input>
-      <my-input text='客户名称' v-model='cus_name' disable></my-input>
-      <hr/>
-      <!--<my-date text='日期' v-model='date' id='fee_date' next='fee_name'></my-date>-->
-      <my-search text='商品编号'
-                 id='good_id'
-                 v-model='good_id'
-                 :method='searchGood'
-                 :callback='callback'
-                 :options='options'>
-      </my-search>
-      <my-input text='商品名' v-model='good_name' id='good_name' disable></my-input>
-      <my-input text='拼音码' v-model='good_spell' id='good_spell' disable></my-input>
-      <my-input text='库存' v-model='good_stock' id='good_stock' disable></my-input>
-      <my-input text='单位' v-model='unit' id='unit' disable></my-input>
-      <my-input text='件数' v-model='count' id='count' next='countUnit' pre='!good_id'></my-input>
-      <my-input text='数量' v-model='countUnit' id='countUnit' next='price' pre="count"></my-input>
-      <my-input text='单价' v-model='price' id='price' next='addGood' pre="!countUnit"></my-input>
-      <my-input text='供应商' v-model='supplier' id='supplier' disable></my-input>
-      <section class='btn-panel'>
-        <div class='btnItem'
-             @keyup.down="goTarget('!good_id')"
-             @keyup.up="goTarget('price')">
-          <el-button type='primary' id='addGood'
-                     @click.stop='addGood'>{{selected ? '修改' : '添加'}}
-          </el-button>
+    <!--操作-->
+    <el-col :span='6'>
+        <div class='my-panel' style='padding: 0'>
+            <div class='my-panel-header'>销售下单</div>
+            <my-search text="客户编号"
+                       id="cus_id"
+                       v-model="cus_id"
+                       :method="searchCustomer"
+                       :callback="customerCallback"
+                       :options="cusOptions">
+            </my-search>
+            <my-input text='拼音码' v-model='cus_spell' disable></my-input>
+            <my-input text='客户名称' v-model='cus_name' disable></my-input>
+            <hr/>
+            <!--<my-date text='日期' v-model='date' id='fee_date' next='fee_name'></my-date>-->
+            <my-search text='商品编号'
+                       id='good_id'
+                       v-model='good_id'
+                       :method='searchGood'
+                       :callback='callback'
+                       :options='options'>
+            </my-search>
+            <my-input text='商品名' v-model='good_name' id='good_name' disable></my-input>
+            <my-input text='拼音码' v-model='good_spell' id='good_spell' disable></my-input>
+            <my-input text='库存' v-model='good_stock' id='good_stock' disable></my-input>
+            <my-input text='单位' v-model='unit' id='unit' disable></my-input>
+            <my-input text='件数' v-model='count' id='count' next='countUnit' pre='!good_id'></my-input>
+            <my-input text='数量' v-model='countUnit' id='countUnit' next='price' pre="count"></my-input>
+            <my-input text='单价' v-model='price' id='price' next='addGood' pre="!countUnit"></my-input>
+            <my-input text='供应商' v-model='supplier' id='supplier' disable></my-input>
+            <section class='btn-panel'>
+                <div class='btnItem'
+                     @keyup.down="goTarget('!good_id')"
+                     @keyup.up="goTarget('price')">
+                    <el-button type='primary' id='addGood'
+                               @click.stop='addGood'>{{selected ? '修改' : '添加'}}
+                    </el-button>
+                </div>
+                <div class='btnItem'
+                     v-show="selected">
+                    <el-button type='danger'
+                               @click.stop='delGood'>删除
+                    </el-button>
+                </div>
+            </section>
+            <hr/>
+            <my-input text='合计金额' v-model='total' disable></my-input>
+            <my-input text='前欠金额' v-model='beforeLoan' disable></my-input>
+            <my-input text='挂欠金额' v-model='nowLoan' disable></my-input>
+            <my-input text='去尾数' v-model='tailMoney' id='tailMoney' next='appear'></my-input>
+            <my-search text="去尾供应商"
+                       id="tailSupplier_id"
+                       v-model="tailSupplierId"
+                       :method="searchSupplier"
+                       :callback="supplierCallback"
+                       :options="supplierOptions">
+            </my-search>
+            <my-input text='总欠金额' v-model='totalLoan' disable></my-input>
+            <my-input text='出场费' v-model='appear' id='appear' next='traffic' pre="tailMoney"></my-input>
+            <my-input text='三轮车费' v-model='traffic' id='traffic' next='factMoney' pre="appear"></my-input>
+            <my-input text='实收金额' v-model='factMoney' id='factMoney' next='addMoney' pre="traffic"></my-input>
+            <section class='btn-panel'>
+                <div class='btnItem'
+                     @keyup.up="goTarget('factMoney')">
+                    <el-button type='primary' id='addMoney'
+                               @click.stop='addIOMoney'>记账
+                    </el-button>
+                </div>
+                <div class='btnItem'>
+                    <el-button type='danger' id='fee_del'
+                               @click.stop='cancelAll'>取消此单
+                    </el-button>
+                </div>
+            </section>
         </div>
-        <div class='btnItem'
-             v-show="selected">
-          <el-button type='danger'
-                     @click.stop='delGood'>删除
-          </el-button>
-        </div>
-      </section>
-      <hr/>
-      <my-input text='合计金额' v-model='total'  disable></my-input>
-      <my-input text='前欠金额' v-model='beforeLoan' disable></my-input>
-      <my-input text='挂欠金额' v-model='nowLoan'  disable></my-input>
-      <my-input text='去尾数' v-model='tailMoney' id='tailMoney' next='appear'></my-input>
-      <my-input text='总欠金额' v-model='totalLoan'  disable></my-input>
-      <my-input text='出场费' v-model='appear' id='appear' next='traffic' pre="tailMoney"></my-input>
-      <my-input text='三轮车费' v-model='traffic' id='traffic' next='factMoney' pre="appear"></my-input>
-      <my-input text='实收金额' v-model='factMoney' id='factMoney' next='addMoney' pre="traffic"></my-input>
-      <section class='btn-panel'>
-        <div class='btnItem'
-             @keyup.up="goTarget('factMoney')">
-          <el-button type='primary' id='addMoney'
-                     @click.stop='addIOMoney'>记账
-          </el-button>
-        </div>
-        <div class='btnItem'>
-          <el-button type='danger' id='fee_del'
-                     @click.stop='cancelAll'>取消此单
-          </el-button>
-        </div>
-      </section>
-    </div>
-  </el-col>
+    </el-col>
 </template>
 
 <script type='text/ecmascript-6'>
@@ -75,6 +82,7 @@
   import myInput from '@/components/myInput'
   import mySearch from '@/components/mySearchInput'
   import api from '@/services/home'
+  import apiSupplier from '@/services/supplier'
   import apiCustomer from '@/services/customer'
   import bus from '@/bus'
   import common from '@/until'
@@ -109,7 +117,11 @@
         tailMoney: 0,
         appear: 0,
         traffic: 0,
-        factMoney: ''
+        factMoney: '',
+        // 尾数供应商
+        tailSupplier: '',
+        tailSupplierId: '',
+        supplierOptions: []
       }
     },
     components: {
@@ -167,6 +179,28 @@
       })
     },
     methods: {
+      // 供应商搜索模块
+      searchSupplier (key) {
+        apiSupplier.getSupplier({key: key || ''})
+          .then((res) => {
+            if (res.ret === 0) {
+              this.supplierOptions = apiSupplier.toSearch(res.suppliers)
+            }
+          })
+          .catch((msg) => {
+            alert(msg)
+          })
+      },
+      // 供应商搜索回调
+      supplierCallback (val) {
+        let len = this.supplierOptions.length
+        for (let i = 0; i < len; i++) {
+          if (this.supplierOptions[i].value === val) {
+            this.tailSupplier = this.supplierOptions[i].label
+            return true
+          }
+        }
+      },
       // 客户模块
       searchCustomer (key) {
         apiCustomer.searchCustomer({key: key || ''})
@@ -175,7 +209,9 @@
               this.cusOptions = apiCustomer.toSearch(res.customers)
             }
           })
-          .catch((msg) => { alert(msg) })
+          .catch((msg) => {
+            alert(msg)
+          })
       },
       // 搜索函数回调
       customerCallback (val) {
@@ -279,10 +315,9 @@
             'gWeighFee': this.good_weight * this.countUnit,
             'gPackFee': this.good_pack * this.count,
             'money': this.countMoney(this.price, this.countUnit, this.count,
-            this.good_weight, this.good_pack)
+              this.good_weight, this.good_pack)
           })
         } else {
-          console.log(this.GoodList, 1)
           this.GoodList[this.selectedIndex] = {
             'gId': this.good_id,
             'gSpell': this.good_spell,
@@ -353,7 +388,9 @@
           'oweMoney': this.nowLoan || 0,
           'shishou': this.factMoney - 0,
           'totalMoney': this.total - 0,
-          'storeList': this.GoodList
+          'storeList': this.GoodList,
+          'tailSupplier': this.tailSupplier,
+          'tailSupplierId': this.tailSupplierId
         })
           .then((res) => {
             alert('添加成功')
@@ -380,6 +417,7 @@
       clearAllData () {
         this.clearData()
         this.GoodList = []
+        this.cus_id = ''
         this.cus_spell = ''
         this.cus_name = ''
         this.cus_credit = ''
@@ -388,6 +426,11 @@
         this.tailMoney = 0
         this.appear = 0
         this.factMoney = ''
+        this.tailSupplierId = ''
+        this.tailSupplier = ''
+        this.options = []
+        this.cusOptions = []
+        this.supplierOptions = []
         bus.$emit('addInGood', this.GoodList)
       },
       clearData () {

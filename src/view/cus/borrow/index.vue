@@ -41,7 +41,7 @@
     },
     mounted: function () {
       this.$nextTick(function () {
-        bus.$on('getBorrowMoney', this.getMoney)
+        bus.$off('getBorrowMoney').$on('getBorrowMoney', this.getMoney)
       })
     },
     methods: {
