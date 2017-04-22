@@ -37,7 +37,7 @@
       return {
         index: -1,
         type: 1,
-        tableConfig: [
+        tableConfigCustomer: [
           {label: '客户名称', prop: 'cName', width: '100'},
           {label: 'ID', prop: 'cId', width: '65'},
           {label: '前欠金额', prop: 'beforeMoney', width: '100'},
@@ -46,6 +46,17 @@
           {label: '去尾数', prop: 'tail', width: '100'},
           {label: '总欠金额', prop: 'money', width: '100'}
         ],
+        tableConfigSupplier: [
+          {label: '供应商', prop: 'supplier', width: '100'},
+          {label: 'ID', prop: 'supplierId', width: '65'},
+          {label: '前欠金额', prop: 'beforeMoney', width: '100'},
+          {label: '日欠金额', prop: 'moneyloan', width: '100'},
+          {label: '日收金额', prop: 'moneyGet', width: '100'},
+          {label: '去尾数', prop: 'tail', width: '100'},
+          {label: '总欠金额', prop: 'money', width: '100'}
+        ],
+        tableConfig: [],
+        originData: [],
         tableData: [],
         beforeLoan: 0,
         todayLoan: 0,
@@ -60,9 +71,19 @@
     mounted: function () {
       this.$nextTick(function () {
         bus.$off('RenderLoanData').$on('RenderLoanData', this.getMoney)
-        bus.$off('TypeChange').$on('TypeChange', (type) => {
-          this.type = type
-          this.getMoney()
+        bus.$off('myFilter').$on('myFilter', (id) => {
+          this.tableData = []
+          if (!id) {
+            this.tableData = [...this.originData]
+            return true
+          }
+          const key = this.type === 1 ? 'cId' : 'supplierId'
+          for (let i = this.originData.length; i--;) {
+            if (this.originData[i][key] === id) {
+              this.tableData.push(this.originData[i])
+              break
+            }
+          }
         })
       })
     },
@@ -82,27 +103,32 @@
         }
       },
       getMoney (obj) {
+        this.type = (obj && obj.type) || 1
         const today = (new Date()).Format('yyyy-MM-dd')
         if (this.type === 1) {
+          this.tableConfig = this.tableConfigCustomer
           api.checkLoan({
-            startDate: (obj && obj.begin) || today,
+            startDate: (obj && obj.start) || today,
             endDate: (obj && obj.end) || today
           })
             .then((data) => {
               if (data.ret === 0) {
-                this.tableData = this.transData(data)
+                this.originData = this.transData(data)
+                this.tableData = [...this.originData]
                 this.countAll()
                 // console.log(this.tableData)
               }
             })
         } else {
+          this.tableConfig = this.tableConfigSupplier
           api.checkLoanSupplier({
-            startDate: (obj && obj.begin) || today,
+            startDate: (obj && obj.start) || today,
             endDate: (obj && obj.end) || today
           })
             .then((data) => {
               if (data.ret === 0) {
-                this.tableData = this.transData(data, 'supplierId')
+                this.originData = this.transData(data, 'supplierId')
+                this.tableData = [...this.originData]
                 this.countAll()
                 // console.log(this.tableData)
               }
@@ -111,7 +137,6 @@
       },
       selectItem (row) {
         let key = this.type === 1 ? 'cId' : 'supplierId'
-        console.log(row, key)
         this.index = this.index === row[key] ? -1 : row[key]
         bus.$emit('loanDetailRender', Object.assign({}, row, {select: this.index}))
       },

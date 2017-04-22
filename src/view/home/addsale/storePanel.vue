@@ -387,6 +387,7 @@
           'tailMoney': this.tailMoney - 0,
           'oweMoney': this.nowLoan || 0,
           'shishou': this.factMoney - 0,
+          'totalLoan': this.totalLoan,
           'totalMoney': this.total - 0,
           'storeList': this.GoodList,
           'tailSupplier': this.tailSupplier,

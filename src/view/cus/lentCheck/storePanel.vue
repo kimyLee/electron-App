@@ -22,7 +22,7 @@
                                :callback="supplierCallback"
                                :options="supplierOptions">
                     </my-search>
-                    <my-search text="查询角色" v-model="type" :options="roleType" :callback="changeRole" no-search></my-search>
+                    <my-search text="查询角色" v-model="type" :options="roleType" :callback="renderData" no-search></my-search>
                 </el-col>
                 <el-col :span="12">
                     <my-input text="拼音码" v-model="spell" disable></my-input>
@@ -137,28 +137,39 @@
           this.totalLoan += this.tableData[i].money || 0
         }
       },
-      changeRole () {
-        bus.$emit('TypeChange', this.type)
-      },
       getDetail (id) {
-        api.checkLoanById({
-          startDate: this.date1,
-          endDate: this.date2,
-          id: id
-        })
-          .then((data) => {
-            if (data.ret === 0) {
-              this.tableData = this.transData(data)
-              this.countAll()
-            }
+        if (this.type === 1) {
+          api.checkLoanById({
+            startDate: this.date1,
+            endDate: this.date2,
+            id: id
           })
+            .then((data) => {
+              if (data.ret === 0) {
+                this.tableData = this.transData(data)
+                this.countAll()
+              }
+            })
+        } else {
+          api.checkLoanByIdSupplier({
+            startDate: this.date1,
+            endDate: this.date2,
+            id: id
+          })
+            .then((data) => {
+              if (data.ret === 0) {
+                this.tableData = this.transData(data, 'cId')
+                this.countAll()
+              }
+            })
+        }
       },
-      transData (data) {
+      transData (data, text) {
         let total = data.total
         let debit = data.debit
         let debitSale = data.debitSale
         let special = ['moneyGet', 'moneyloan']
-        const key = 'supplierId'
+        const key = text || 'supplierId'
         // 数据合并
         let Join = (obj1, arr) => {
           let obj = {...obj1}
@@ -185,7 +196,8 @@
       renderData () {
         bus.$emit('RenderLoanData', {
           start: this.date1,
-          end: this.date2
+          end: this.date2,
+          type: this.type
         })
       },
       // 客户搜索模块
@@ -206,11 +218,15 @@
       },
       // 搜索函数回调
       callback (val) {
+        if (!val) {
+          bus.$emit('myFilter')
+        }
         let len = this.options.length
         for (let i = 0; i < len; i++) {
           if (this.options[i].value === val) {
             this.spell = this.options[i].spell
             this.name = this.options[i].name
+            bus.$emit('myFilter', val)
             return true
           }
         }
@@ -232,11 +248,15 @@
       },
       // 供应商搜索回调
       supplierCallback (val) {
+        if (!val) {
+          bus.$emit('myFilter')
+        }
         let len = this.supplierOptions.length
         for (let i = 0; i < len; i++) {
           if (this.supplierOptions[i].value === val) {
             this.name = this.supplierOptions[i].label
             this.spell = ''
+            bus.$emit('myFilter', val)
             return true
           }
         }

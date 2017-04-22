@@ -33,16 +33,16 @@
       return {
         index: -1,
         tableConfigAll: [
-          {label: '单号', prop: 'name'},
-          {label: '客户编号', prop: 'count'},
-          {label: '客户名', prop: 'count'},
-          {label: '单据类型', prop: 'count'},
-          {label: '总金额', prop: 'countUnit'},
-          {label: '实收', prop: 'price'},
-          {label: '总欠', prop: 'unit'},
+          {label: '单号', prop: 'id'},
+          {label: '单据类型', prop: 'ticket'},
+          {label: '客户编号', prop: 'cId'},
+          {label: '客户名', prop: 'cName'},
+          {label: '总金额', prop: 'money'},
+          {label: '实收', prop: 'shishou'},
+          {label: '总欠', prop: 'totalLoan'},
           {label: '前欠', prop: 'weight'},
-          {label: '去尾数', prop: 'pack'},
-          {label: '对象', prop: 'pack'},
+          {label: '去尾数', prop: 'tailMoney'},
+          {label: '对象', prop: 'destination'},
           {label: '日期', prop: 'supplier'}
         ],
         // 三轮车和出场在详情
@@ -72,7 +72,9 @@
         ],
         tableConfig: [],
         tableData: [],
-        originData: [],
+        saleData: [],
+        transData: [],
+        loanData: [],
         totalCount: 0,
         totalCountUnit: 0,
         totalMoney: 0,
@@ -111,23 +113,39 @@
         }
         this.totalMoney = this.totalMoney.toFixed(2)
       },
-      FilterTable (arr) {
-        this.tableData = arr.filter((e) => {
-          return (e.id === this.goodId || !this.goodId) &&
-            (e.supplierId === this.supplierId || !this.supplierId)
+      FilterTable () {
+        this.saleData = this.saleData.map((e) => {
+          e.ticket = '销售单'
+          e.money = e.totalMoney
+          return e
         })
+        this.transData = this.transData.map((e) => {
+          e.ticket = '转账单'
+          e.money = e.amount
+          e.cName = e.destination
+          return e
+        })
+        this.loanData = this.loanData.map((e) => {
+          e.id = e.loanId
+          e.ticket = e.type ? '还款单' : '借款单'
+          return e
+        })
+        this.tableData = this.saleData.concat(this.transData, this.loanData)
+        console.log(this.tableData)
       },
       getList (obj) {
         const today = (new Date()).Format('yyyy-MM-dd')
         // 可以传入 delete 参数
-        api.checkOrder({
+        api.checkAll({
           startDate: (obj && obj.begin) || today,
           endDate: (obj && obj.end) || today
         })
           .then((data) => {
             if (data.ret === 0) {
-              this.originData = data.list || []
-              this.FilterTable(this.originData)
+              this.saleData = data.sale || []
+              this.transData = data.trans || []
+              this.loanData = data.borrow || []
+              this.FilterTable()
             }
           })
           .catch((err) => {
@@ -139,6 +157,11 @@
         if (label === '均价') {
           return function (row) {
             return ((row.totalMoney - row.weight - row.pack) / row.countUnit).toFixed(2)
+          }
+        }
+        if (label === '日期') {
+          return function (row) {
+            return (new Date(row.date)).Format('yyyy-MM-dd')
           }
         }
         return null
