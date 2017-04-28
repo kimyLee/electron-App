@@ -20,6 +20,8 @@ export default {
   checkOrderById: xhr.get.bind(null, '/sales/good'),
   // 查询明细
   checkAll: xhr.get.bind(null, '/sales/queryAll'),
+  // 查询详细
+  checkById: xhr.get.bind(null, '/sales/detail'),
   toSearch (data, supplierId) {
     const len = data.length
     let arr = []

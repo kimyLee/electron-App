@@ -41,7 +41,7 @@
     </el-col>
 </template>
 
-<script type="text/ecmascript-6">
+<script type="text/babel">
   import myDate from '@/components/myDatePicker'
   import myInput from '@/components/myInput'
   import mySearch from '@/components/mySearchInput'
@@ -166,6 +166,7 @@
           money: this.money - 0,
           supplier: this.supplier,
           supplierId: this.supplier_id,
+          total_loan: this.total + (this.type ? -1 : 1) * this.money,
           type: 0,
           remark: this.note
         })
