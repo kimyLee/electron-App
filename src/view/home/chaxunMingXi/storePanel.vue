@@ -39,73 +39,6 @@
       </section>
       <div class="my-panel" style="margin-top: 2px;min-height: 560px">
         <el-row>
-          <!--支持改单-->
-          <div v-show="showType===1">
-            <el-row>
-              <el-col :span="12">
-                <my-input text='下单客户' v-model='saleData.cName' disable></my-input>
-                <my-input text='客户编码' v-model='saleData.cId' disable></my-input>
-                <my-input text='拼音码' v-model='saleData.cSpell' disable></my-input>
-              </el-col>
-              <el-col :span="12">
-                <my-input text='件数' v-model='good_count' id='count' next='countUnit' pre='!good_id'></my-input>
-                <my-input text='数量' v-model='good_countUnit' id='countUnit' next='price' pre="count"></my-input>
-                <my-input text='单价' v-model='good_price' id='price' next='addGood' pre="!countUnit"></my-input>
-              </el-col>
-            </el-row>
-            <hr/>
-            <el-row>
-              <el-col :span="12">
-                <my-input text='合计金额' v-model='totalMoney' disable></my-input>
-               <!-- <my-input text='前欠金额' :value='beforeLoan' disable></my-input>-->
-                <my-input text='挂欠金额' v-model='loanMoney' disable></my-input>
-                <my-input text='去尾数' v-model='saleData.tailMoney' id='tailMoney' disable></my-input>
-                <my-input text='出场费' v-model='saleData.appearanceFee' id='appear' disable></my-input>
-
-              </el-col>
-              <el-col :span="12">
-                <my-input text='尾数供应商' v-model='saleData.supplier' disable></my-input>
-                <my-input text='总欠金额' v-model='saleData.totalLoan' disable></my-input>
-                <my-input text='三轮车费' v-model='saleData.carFee' id='traffic' next='factMoney' pre="appear"></my-input>
-                <my-input text='实收金额' v-model='saleData.shishou' id='factMoney' next='addMoney' pre="traffic"></my-input>
-              </el-col>
-            </el-row>
-            <hr/>
-            <!--<my-date text='日期' v-model='date' id='fee_date' next='fee_name'></my-date>-->
-            <section class='btn-panel'>
-              <div class='btnItem'
-                   @keyup.down="goTarget('!good_id')"
-                   @keyup.up="goTarget('price')">
-                <el-button type='primary' id='addGood'
-                           @click.stop='addGood'>{{selected ? '修改' : '添加'}}
-                </el-button>
-                <el-button type='primary' id='addGood'
-                           @click.stop='addGood'>改单
-                </el-button>
-              </div>
-              <div class='btnItem'
-                   v-show="selected">
-                <el-button type='danger'
-                           @click.stop='delGood'>删除
-                </el-button>
-              </div>
-            </section>
-            <el-table
-                    :data="tableData"
-                    height="350"
-                    stripe
-                    border
-                    :row-class-name="setClass"
-                    @row-click="selectItem"
-                    style="width: 100%;font-size: 12px">
-              <el-table-column v-for="(item, $index) in tableConfig"
-                               :key="$index"
-                               :prop="item.prop"
-                               :label="item.label"
-                               :width="item.width">
-              </el-table-column>
-            </el-table>
-          </div>
           <div  v-show="showType===2" class="printField">
             <p class="title">还款单</p>
             <hr style="margin-bottom: 20px;">
@@ -141,6 +74,78 @@
             <p><span style="width: 150px;font-weight: bold;font-size: 16px;margin-right: 20px">客户名称:</span><span>{{transData.destination}}</span></p>
             <p><span style="width: 150px;font-weight: bold;font-size: 16px;margin-right: 20px">转账金额：</span><span>{{transData.amount}}</span></p>
             <p><span style="width: 150px;font-weight: bold;font-size: 16px;margin-right: 20px">备注：</span><span>{{transData.remark}}</span></p>
+          </div>
+          <!--支持改单-->
+          <div v-show="showType===1">
+            <el-row>
+              <el-col :span="12">
+                <my-input text='下单客户' v-model='saleData.cName' disable></my-input>
+                <my-input text='客户编码' v-model='saleData.cId' disable></my-input>
+                <my-input text='拼音码' v-model='saleData.cSpell' disable></my-input>
+              </el-col>
+              <el-col :span="12">
+                <my-input text='件数' v-model='good_count' id='count' next='countUnit' pre='!good_id'></my-input>
+                <my-input text='数量' v-model='good_countUnit' id='countUnit' next='price' pre="count"></my-input>
+                <my-input text='单价' v-model='good_price' id='price' next='addGood' pre="!countUnit"></my-input>
+              </el-col>
+            </el-row>
+            <hr/>
+            <el-row>
+              <el-col :span="12">
+                <my-input text='合计金额' v-model='totalMoney' disable></my-input>
+                <!-- <my-input text='前欠金额' :value='beforeLoan' disable></my-input>-->
+                <my-input text='挂欠金额' v-model='loanMoney' disable></my-input>
+                <my-input text='去尾数' v-model='saleData.tailMoney' id='tailMoney' disable></my-input>
+                <my-input text='出场费' v-model='saleData.appearanceFee' id='appear' disable></my-input>
+
+              </el-col>
+              <el-col :span="12">
+                <my-input text='尾数供应商' v-model='saleData.supplier' disable></my-input>
+                <my-input text='总欠金额' v-model='saleData.totalLoan' disable></my-input>
+                <my-input text='三轮车费' v-model='saleData.carFee' id='traffic' next='factMoney' pre="appear"></my-input>
+                <my-input text='实收金额' v-model='saleData.shishou' id='factMoney' next='addMoney' pre="traffic"></my-input>
+              </el-col>
+            </el-row>
+            <hr/>
+            <!--<my-date text='日期' v-model='date' id='fee_date' next='fee_name'></my-date>-->
+            <section class='btn-panel'>
+              <div class='btnItem'
+                   @keyup.down="goTarget('!good_id')"
+                   @keyup.up="goTarget('price')">
+                <el-button type='primary' id='addGood'
+                           @click.stop='addGood'>{{selected ? '修改' : '添加'}}
+                </el-button>
+              </div>
+              <!--修改条目-->
+              <div class='btnItem'
+                   @keyup.down="goTarget('!good_id')"
+                   @keyup.up="goTarget('price')">
+                <el-button type='primary'
+                           @click.stop='correctGood'>修改
+                </el-button>
+              </div>
+              <div class='btnItem'
+                   v-show="selected">
+                <el-button type='danger'
+                           @click.stop='delGood'>删除
+                </el-button>
+              </div>
+            </section>
+            <el-table
+              :data="tableData"
+              height="350"
+              stripe
+              border
+              :row-class-name="setClass"
+              @row-click="selectItem"
+              style="width: 100%;font-size: 12px">
+              <el-table-column v-for="(item, $index) in tableConfig"
+                               :key="$index"
+                               :prop="item.prop"
+                               :label="item.label"
+                               :width="item.width">
+              </el-table-column>
+            </el-table>
           </div>
         </el-row>
       </div>
@@ -214,10 +219,11 @@
       // 总欠金额
       totalMoney () {
         let temp = 0
-        for (let i = this.GoodList.length; i--;) {
-          temp += this.GoodList[i].money
+        for (let i = this.tableData.length; i--;) {
+          temp += this.tableData[i].money
         }
         temp = temp + (this.traffic - 0) + (this.appear - 0)
+        // 如果是现金客户（这里不用考虑）
         if (this.cus_id === 1) {
           this.factMoney = Math.round(temp)
         }
@@ -230,14 +236,7 @@
         } else {
           return ''
         }
-      },
-      /*beforeLoan () {
-        if (this.saleData.money) {
-          return this.saleData.money
-        } else {
-          return ''
-        }
-      }*/
+      }
     },
     watch: {
       date1: 'fireRender',
@@ -341,11 +340,22 @@
           this.index = row.gId
           this.good_count = row.count
           this.good_countUnit = row.countUnit
-          this.good_price = row.countUnit
+          this.good_price = row.price
         }
       },
       setClass (row) {
         return (row.gId === this.index ? 'active' : '')
+      },
+      // 修改单条商品记录
+      correctGood () {
+        for (let i = this.tableData.length; i--;) {
+          if (this.tableData[i].gId === this.index) {
+            this.tableData[i].count = this.good_count
+            this.tableData[i].countUnit = this.good_countUnit
+            this.tableData[i].good_price = this.good_count
+            break
+          }
+        }
       },
       // 还没用
       searchGood (key) {

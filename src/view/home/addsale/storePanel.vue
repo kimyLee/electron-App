@@ -275,7 +275,7 @@
         weight -= 0
         count -= 0
         pack -= 0
-        return price * countUnit + count * pack + weight * countUnit
+        return price * countUnit - 0 + count * pack - 0 + weight * countUnit - 0
       },
       addGood () {
         if (!this.good_id || !this.supplierId) {
