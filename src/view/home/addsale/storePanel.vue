@@ -297,7 +297,6 @@
         this.price -= 0
         this.countUnit -= 0
         this.count -= 0
-        this.price -= 0
         this.good_weight -= 0
         this.good_pack -= 0
         if (!this.selected) {
@@ -391,7 +390,7 @@
           'totalMoney': this.total - 0,
           'storeList': this.GoodList,
           'tailSupplier': this.tailSupplier,
-          'tailSupplierId': this.tailSupplierId
+          'tailSupplierId': this.tailSupplierId || 0
         })
           .then((res) => {
             alert('添加成功')

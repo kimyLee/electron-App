@@ -121,13 +121,12 @@
                    @keyup.down="goTarget('!good_id')"
                    @keyup.up="goTarget('price')">
                 <el-button type='primary'
-                           @click.stop='correctGood'>修改
+                           @click.stop='correctGood'>修改条目
                 </el-button>
               </div>
-              <div class='btnItem'
-                   v-show="selected">
+              <div class='btnItem'>
                 <el-button type='danger'
-                           @click.stop='delGood'>删除
+                           @click.stop='cancelCorrect'>取消
                 </el-button>
               </div>
             </section>
@@ -195,6 +194,7 @@
           {label: '供应商', prop: 'supplier'},
           {label: '合计', prop: 'money'}
         ],
+        sourceData: [], // 表格原数据， 取消时可用
         tableData: [], // 表格数据
         index: -1, // 选中商品
         good_count: '', // 商品件数
@@ -282,11 +282,19 @@
           id: id
         })
           .then((data) => {
+            this.sourceData = data || []
             this.tableData = data || []
+            this.initTableDate()
           })
           .catch((err) => {
             console.log(err)
           })
+      },
+      // 获取商品包装费过磅费
+      initTableDate () {
+        for (let i = this.sourceData.length; i--;) {
+
+        }
       },
       // 单据类型改变
       ticketChange () {
@@ -328,6 +336,12 @@
         }
         bus.$emit('customerChange', this.cus_id)
       },
+      /** 商品修改模块 **/
+      cancelCorrect () {
+        if (confirm('是否取消修改单据？')) {
+          this.tableData = [...this.sourceData]
+        }
+      },
       // 商品明细选择
       // 选择条目 type: 类型， 其他：数据
       selectItem (row) {
@@ -346,13 +360,24 @@
       setClass (row) {
         return (row.gId === this.index ? 'active' : '')
       },
+      // 商品金额计算 单价 数量 件数 过磅 包装
+      countMoney (price, countUnit, count, weight, pack) {
+        price -= 0
+        countUnit -= 0
+        weight -= 0
+        count -= 0
+        pack -= 0
+        return price * countUnit - 0 + count * pack - 0 + weight * countUnit - 0
+      },
       // 修改单条商品记录
       correctGood () {
         for (let i = this.tableData.length; i--;) {
           if (this.tableData[i].gId === this.index) {
             this.tableData[i].count = this.good_count
             this.tableData[i].countUnit = this.good_countUnit
-            this.tableData[i].good_price = this.good_count
+            this.tableData[i].good_price = this.good_price
+            this.tableData[i].money =
+              this.countMoney(this.good_price, this.good_countUnit, this.good_count, this.tableData[i].weighFee, this.tableData[i].packFee)
             break
           }
         }
